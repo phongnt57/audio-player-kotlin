@@ -32,6 +32,7 @@ import com.pntstudio.buzz.tedaudio.receiver.ControlActionsListener
 import com.pntstudio.buzz.tedaudio.receiver.HeadsetPlugReceiver
 import com.pntstudio.buzz.tedaudio.receiver.RemoteControlReceiver
 import com.squareup.otto.Bus
+import retrofit2.http.POST
 import java.util.*
 
 class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
@@ -110,20 +111,15 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
                 Thread {
                     if (!isServiceInitialized) {
                         initService()
+                        mSongs = intent.getSerializableExtra("list") as ArrayList<MediaItemData>
+                        mCurrSong = intent.getSerializableExtra("detail") as MediaItemData
+                        val position = intent.getIntExtra(SONG_POS, 0);
+
                     }
                     initSongs()
                 }.start()
             }
-            INIT_PATH -> {
-                mIsThirdPartyIntent = true
-                if (intentUri != intent.data) {
-                    intentUri = intent.data
-                    initService()
-                    initSongs()
-                } else {
-                    updateUI()
-                }
-            }
+
             SETUP -> {
                 mPlayOnPrepare = true
                 setupNextSong()
@@ -511,6 +507,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
             mp.start()
             requestAudioFocus()
         }
+        mBus!!.post(Events.DurationUpdate(mPlayer!!.duration))
         songStateChanged(getIsPlaying())
         setupNotification()
     }

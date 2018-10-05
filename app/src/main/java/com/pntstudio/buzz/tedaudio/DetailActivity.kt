@@ -35,6 +35,7 @@ class DetailActivity : AppCompatActivity() {
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     lateinit var bus: Bus
+    lateinit var model: MediaItemFragmentViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +57,7 @@ class DetailActivity : AppCompatActivity() {
         container.adapter = mSectionsPagerAdapter
 
 
-        val model = ViewModelProviders.of(this).get(MediaItemFragmentViewModel::class.java!!)
+        model = ViewModelProviders.of(this).get(MediaItemFragmentViewModel::class.java!!)
         model.loadMediaItems(listMedia)
         model.setSelectedMedia(detail)
         model.setSelectNumber(position)
@@ -71,6 +72,7 @@ class DetailActivity : AppCompatActivity() {
         repeat_btn.setOnClickListener { toggleSongRepetition() }
         song_progress_current.setOnClickListener { sendIntent(SKIP_BACKWARD) }
         song_progress_max.setOnClickListener { sendIntent(SKIP_FORWARD) }
+        initSericePlayer()
 
 
     }
@@ -113,6 +115,16 @@ class DetailActivity : AppCompatActivity() {
         })
     }
 
+    private fun initSericePlayer() {
+        Intent(this, MusicService::class.java).apply {
+            putExtra(SONG_POS, model.getSelecrNUmber().value)
+            putExtra("list",model.getMediaList().value)
+            putExtra("detail",model.getSelectedMedia().value)
+            action = INIT
+            startService(this)
+        }
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -136,6 +148,17 @@ class DetailActivity : AppCompatActivity() {
     @Subscribe
     fun songChangedEvent(event: Events.SongChanged) {
         Log.e("change", "----");
+        val song = event.song
+//        updateSongInfo(song)
+//        markCurrentSong()
+
+    }
+
+    @Subscribe
+    fun songChangeDuration(event: Events.DurationUpdate){
+        val duration = event.duration
+        song_progressbar.max = duration/1000
+
     }
 
     @Subscribe

@@ -37,4 +37,5 @@
     <dimen name="normal_margin">12dp</dimen>
     <dimen name="padding_small">5dp</dimen>
     <dimen name="top_art_height">220dp</dimen>
+    <dimen name="margin_large">30dp</dimen>
 </resources>
