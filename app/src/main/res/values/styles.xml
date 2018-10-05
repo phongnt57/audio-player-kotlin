@@ -8,4 +8,48 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TextAppearance.Uamp.Title" parent="@style/TextAppearance.AppCompat.Title">
+        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="TextAppearance.Uamp.Subtitle" parent="@style/TextAppearance.AppCompat.Small">
+        <item name="android:textColor">?android:textColorSecondary</item>
+    </style>
+
+
+    <style name="MediaStateIcon">
+        <item name="tint">@color/mediaControlColor</item>
+        <item name="android:layout_margin">@dimen/media_item_control_margin</item>
+    </style>
+
+    <style name="MediaItemList">
+        <item name="android:background">@color/mediaListBackground</item>
+        <item name="android:paddingBottom">2dp</item>
+        <!-- In order to account for optical illusions,
+        make the end padding a bit larger so it visually looks the same. -->
+        <item name="android:paddingEnd">3dp</item>
+        <item name="android:paddingStart">2dp</item>
+        <item name="android:paddingTop">2dp</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="MyBorderlessBackgroundStyle">
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+    <style name="MyTransparentButton" parent="Widget.AppCompat.Button">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="background">@drawable/transparent_button</item>
+        <item name="android:background">@drawable/transparent_button</item>
+    </style>
+
+
 </resources>

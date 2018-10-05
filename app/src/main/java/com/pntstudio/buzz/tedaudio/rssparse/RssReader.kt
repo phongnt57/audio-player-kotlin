@@ -3,6 +3,7 @@ package com.pntstudio.buzz.tedaudio.rssparse
 
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
 import org.xml.sax.InputSource
+import java.io.StringReader
 import java.net.URL
 import java.util.*
 import javax.xml.parsers.SAXParserFactory
@@ -17,7 +18,7 @@ class RssReader
  * We set this URL with the constructor
  */
 (// Our class has an attribute which represents RSS Feed URL
-        private val rssUrl: String) {
+        private val rssUrlContent: String) {
     /**
      * Get RSS items. This method will be called to get the parsing process result.
      * @return
@@ -29,14 +30,15 @@ class RssReader
         @Throws(Exception::class)
         get() {
             try {
-                val url = URL(rssUrl)
+//                val url = URL(rssUrl)
                 val factory = SAXParserFactory.newInstance()
                 val parser = factory.newSAXParser()
                 val reader = parser.xmlReader
                 val handler = RssParseHandler()
                 reader.contentHandler = handler
-                val source = InputSource(url.openStream())
-                reader.parse(source)
+//                val source = InputSource(url.openStream())
+                val inputSource = InputSource(StringReader(rssUrlContent))
+                reader.parse(inputSource)
                 return handler.mediaItemList
             } catch (e: Exception) {
                 e.printStackTrace()

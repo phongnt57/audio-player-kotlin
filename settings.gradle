@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':media-player'
+project(':media-player').projectDir = new File('media')

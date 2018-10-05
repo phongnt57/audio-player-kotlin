@@ -14,26 +14,27 @@ class RssParseHandler : DefaultHandler() {
     lateinit var currentMediaItem: MediaItemData;
     var parsingTitle = false
     var parsingDescription = false
+    var parsingItem = false
 //    var  parsingImageUrl = false
 //    var parsingMp3Url = false
     var parsingdateTime = false
     override fun startElement(uri: String?, localName: String?, qName: String?, attributes: Attributes?) {
         if ("item" == qName) {
             currentMediaItem = MediaItemData("","","","","")
+            parsingItem = true
         } else if ("title" == qName) {
             parsingTitle = true
         } else if("description"==qName){
             parsingDescription = true;
-
         }else if("pubDate"==qName){
             parsingdateTime = true;
 
         }
-        else if (localName=="thumbnail") {
+        else if (localName=="thumbnail" && parsingItem) {
             val thumbnail = attributes?.getValue("url")
             currentMediaItem.imageUrl = thumbnail!!
 
-        }  else if (localName == "content") {
+        }  else if (localName == "content" && parsingItem) {
             val mp3Link = attributes?.getValue("url")
             currentMediaItem.mp3Url = mp3Link.toString()
         }
@@ -46,6 +47,7 @@ class RssParseHandler : DefaultHandler() {
     override fun endElement(uri: String?, localName: String?, qName: String?) {
         if ("item".equals(qName, ignoreCase = true)) {
             mediaItemList.add(currentMediaItem)
+            parsingItem = false
 //            currentMediaItem = null
         } else if ("title".equals(qName, ignoreCase = true)) {
             parsingTitle = false
@@ -60,15 +62,15 @@ class RssParseHandler : DefaultHandler() {
     // Characters method fills current RssItem object with data when title and link tag content is being processed
     @Throws(SAXException::class)
     override fun characters(ch: CharArray, start: Int, length: Int) {
-        if (parsingTitle) {
+        if (parsingTitle && parsingItem) {
                 currentMediaItem.title = String(ch, start, length)
 
-        } else if (parsingDescription) {
+        } else if (parsingDescription && parsingItem) {
                 // currentItem.setLink(new String(ch, start, length));
                 currentMediaItem.description = String(ch, start, length)
                 Log.e("description", String(ch, start, length))
 
-        } else if (parsingdateTime) {
+        } else if (parsingdateTime && parsingItem) {
                 currentMediaItem.dateTime = String(ch,start,length)
 
         }
