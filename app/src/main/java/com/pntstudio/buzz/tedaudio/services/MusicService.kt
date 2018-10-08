@@ -109,14 +109,15 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
             INIT -> {
                 mIsThirdPartyIntent = false
                 Thread {
+                    var postion = 0
                     if (!isServiceInitialized) {
                         initService()
                         mSongs = intent.getSerializableExtra("list") as ArrayList<MediaItemData>
                         mCurrSong = intent.getSerializableExtra("detail") as MediaItemData
-                        val position = intent.getIntExtra(SONG_POS, 0);
+                        postion = intent.getIntExtra(PLAYPOS, 0);
 
                     }
-                    initSongs()
+                    initSongs(postion)
                 }.start()
             }
 
@@ -196,37 +197,39 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
     }
 
     private fun setupSong() {
-        if (mIsThirdPartyIntent) {
-            initMediaPlayerIfNeeded()
-
-            try {
-                mPlayer!!.apply {
-                    reset()
-                    setDataSource(applicationContext, intentUri)
-                    setOnPreparedListener(null)
-                    prepare()
-                    start()
-                    requestAudioFocus()
-                }
-
-                val song = mSongs.first()
-                mSongs.clear()
-                mSongs.add(song)
-                mCurrSong = song
-                updateUI()
-            } catch (e: Exception) {
-                Log.e(TAG, "setupSong Exception $e")
-            }
-        } else {
+//        if (mIsThirdPartyIntent) {
+//            initMediaPlayerIfNeeded()
+//
+//            try {
+//                mPlayer!!.apply {
+//                    reset()
+//                    setDataSource(applicationContext, intentUri)
+//                    setOnPreparedListener(null)
+//                    prepare()
+//                    start()
+//                    requestAudioFocus()
+//                }
+//
+//                val song = mSongs.first()
+//                mSongs.clear()
+//                mSongs.add(song)
+//                mCurrSong = song
+//                updateUI()
+//            } catch (e: Exception) {
+//                Log.e(TAG, "setupSong Exception $e")
+//            }
+//        } else {
             mPlayOnPrepare = false
             setupNextSong()
-        }
+//        }
     }
 
-    private fun initSongs() {
-        if (mCurrSong == null) {
-            setupSong()
-        }
+    private fun initSongs(postion:Int) {
+//        if (mCurrSong == null) {
+            mPlayOnPrepare = true
+            setSong(postion, true)
+
+//        }
         updateUI()
     }
 
@@ -423,11 +426,11 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
     }
 
     private fun setupNextSong() {
-        if (mIsThirdPartyIntent) {
-            setupSong()
-        } else {
+//        if (mIsThirdPartyIntent) {
+//            setupSong()
+//        } else {
             setSong(getNewSongId(), true)
-        }
+//        }
     }
 
     private fun restartSong() {
@@ -455,6 +458,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         initMediaPlayerIfNeeded()
 
         mPlayer!!.reset()
+
         if (addNewSongToHistory) {
             mPlayedSongIndexes.add(songIndex)
             if (mPlayedSongIndexes.size >= mSongs.size) {

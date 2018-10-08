@@ -12,10 +12,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.android.uamp.viewmodels.MediaItemFragmentViewModel
-import com.pntstudio.buzz.tedaudio.DetailActivity
 import com.pntstudio.buzz.tedaudio.R
+import com.pntstudio.buzz.tedaudio.helps.PLAYPOS
+import com.pntstudio.buzz.tedaudio.helps.SONG_POS
 import com.pntstudio.buzz.tedaudio.model.MediaItemAdapter
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
+import com.pntstudio.buzz.tedaudio.services.MusicService
 import com.pntstudio.buzz.tedaudio.viewmodel.MediaListFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_meia_list.*
 
@@ -29,6 +31,9 @@ import kotlinx.android.synthetic.main.fragment_meia_list.*
  */
 class DetailMediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
     override fun onClick(item: MediaItemData,position:Int) {
+        mediaAdapter.currentItemSelect = position
+        mediaAdapter.notifyDataSetChanged()
+        songPicked(position)
 
     }
 
@@ -56,6 +61,16 @@ class DetailMediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
         viewmodel = ViewModelProviders.of(activity!!).get(MediaItemFragmentViewModel::class.java)
         mediaAdapter = MediaItemAdapter(context!!, viewmodel.getMediaList().value!!, this@DetailMediaListFragment, viewmodel.getSelecrNUmber().value!!)
         mediaRv.adapter = mediaAdapter
+        viewmodel.getSelectedMedia().observe(this,object :Observer<MediaItemData>{
+            override fun onChanged(t: MediaItemData?) {
+                val position = viewmodel.getMediaList().value!!.indexOf(t)
+                mediaAdapter.currentItemSelect = position
+                mediaAdapter.notifyDataSetChanged()
+
+            }
+
+
+        })
 
 //        viewmodel.heroes.observe(this, object : Observer<ArrayList<MediaItemData>> {
 //            override fun onChanged(t: ArrayList<MediaItemData>?) {
@@ -64,6 +79,14 @@ class DetailMediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
 //
 //
 //        })
+    }
+    private fun songPicked(pos: Int) {
+//        setupIconColors()
+        Intent(activity, MusicService::class.java).apply {
+            putExtra(SONG_POS, pos)
+            action = PLAYPOS
+            activity!!.startService(this)
+        }
     }
 
 

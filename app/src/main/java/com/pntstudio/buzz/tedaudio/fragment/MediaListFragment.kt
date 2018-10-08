@@ -16,6 +16,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import com.pntstudio.buzz.tedaudio.DetailActivity
 import com.pntstudio.buzz.tedaudio.MainActivity
+import com.pntstudio.buzz.tedaudio.helps.PLAYPOS
 import com.pntstudio.buzz.tedaudio.viewmodel.MediaListFragmentViewModel
 import com.pntstudio.buzz.tedaudio.model.MediaItemAdapter
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
@@ -34,7 +35,7 @@ class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
         val intent = Intent(activity,DetailActivity::class.java)
         intent.putExtra("list",viewmodel.getMediaList().value)
         intent.putExtra("detail",item)
-        intent.putExtra("postition",position)
+        intent.putExtra(PLAYPOS,position)
         startActivity(intent)
     }
 

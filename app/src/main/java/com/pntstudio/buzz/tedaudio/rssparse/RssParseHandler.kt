@@ -15,12 +15,13 @@ class RssParseHandler : DefaultHandler() {
     var parsingTitle = false
     var parsingDescription = false
     var parsingItem = false
+    var parsingOrginLink = false
 //    var  parsingImageUrl = false
 //    var parsingMp3Url = false
     var parsingdateTime = false
     override fun startElement(uri: String?, localName: String?, qName: String?, attributes: Attributes?) {
         if ("item" == qName) {
-            currentMediaItem = MediaItemData("","","","","")
+            currentMediaItem = MediaItemData("","","","","","")
             parsingItem = true
         } else if ("title" == qName) {
             parsingTitle = true
@@ -29,6 +30,8 @@ class RssParseHandler : DefaultHandler() {
         }else if("pubDate"==qName){
             parsingdateTime = true;
 
+        }else if("feedburner:origLink"==qName){
+            parsingOrginLink = true
         }
         else if (localName=="thumbnail" && parsingItem) {
             val thumbnail = attributes?.getValue("url")
@@ -38,9 +41,6 @@ class RssParseHandler : DefaultHandler() {
             val mp3Link = attributes?.getValue("url")
             currentMediaItem.mp3Url = mp3Link.toString()
         }
-
-
-
 
     }
 
@@ -56,6 +56,8 @@ class RssParseHandler : DefaultHandler() {
         } else if ("pubDate".equals(qName, ignoreCase = true)) {
             parsingdateTime = false
 
+        }else if("feedburner:origLink".equals(qName,ignoreCase = true)){
+            parsingOrginLink = false
         }
     }
 
@@ -73,6 +75,8 @@ class RssParseHandler : DefaultHandler() {
         } else if (parsingdateTime && parsingItem) {
                 currentMediaItem.dateTime = String(ch,start,length)
 
+        }else if(parsingOrginLink && parsingItem){
+            currentMediaItem.originLink = String(ch,start,length)
         }
     }
 }

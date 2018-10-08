@@ -5,9 +5,19 @@
     tools:context="com.pntstudio.buzz.tedaudio.fragment.EnglishSubFragment">
 
     <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
     <TextView
+        android:textAppearance="@style/TextAppearance.Uamp.Subtitle"
+       android:textColor="@color/white"
+        android:id="@+id/transcript_tv"
         android:layout_width="match_parent"
+        android:scrollbars="vertical"
         android:layout_height="match_parent"
         android:text="@string/hello_blank_fragment" />
+    </ScrollView>
 
 </FrameLayout>

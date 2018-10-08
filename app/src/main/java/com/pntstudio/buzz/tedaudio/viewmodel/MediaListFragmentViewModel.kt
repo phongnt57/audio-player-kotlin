@@ -65,7 +65,7 @@ class MediaListFragmentViewModel : ViewModel() {
                 Log.e("response body value","".plus(list.size));
 
                 //finally we are setting the list to our MutableLiveData
-                heroList!!.setValue(list)
+                heroList.setValue(list)
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {

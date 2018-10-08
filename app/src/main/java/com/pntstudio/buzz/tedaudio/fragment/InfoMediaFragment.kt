@@ -1,5 +1,6 @@
 package com.pntstudio.buzz.tedaudio.fragment
 
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -7,8 +8,20 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.android.uamp.viewmodels.MediaItemFragmentViewModel
 
 import com.pntstudio.buzz.tedaudio.R
+import com.tonyodev.fetch2.NetworkType
+import com.tonyodev.fetch2.Priority
+import com.tonyodev.fetch2.Request
+import kotlinx.android.synthetic.main.fragment_info_media.*
+import com.tonyodev.fetch2.Fetch
+import com.tonyodev.fetch2.Fetch
+import com.tonyodev.fetch2.FetchConfiguration
+
+
+
+
 
 /**
  * A simple [Fragment] subclass.
@@ -19,7 +32,8 @@ import com.pntstudio.buzz.tedaudio.R
  * create an instance of this fragment.
  */
 class InfoMediaFragment : Fragment() {
-
+    private  lateinit var viewmodel: MediaItemFragmentViewModel
+    private var fetch: Fetch? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +47,29 @@ class InfoMediaFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_info_media, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewmodel = ViewModelProviders.of(activity!!).get(MediaItemFragmentViewModel::class.java)
+        val fetchConfiguration = FetchConfiguration.Builder(activity!!)
+                .setDownloadConcurrentLimit(3)
+                .build()
+        fetch = Fetch.getInstance(fetchConfiguration)
+
+
+        download_img.setOnClickListener { downLoadFile() }
+    }
+
+    private fun downLoadFile() {
+        val request = Request(viewmodel.getSelectedMedia().value!!.mp3Url!!, "")
+        request.priority = Priority.HIGH
+        request.networkType = NetworkType.ALL
+        fetch!!.enqueue(request, error(){
+
+
+        })
+
+    }
+
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -43,39 +80,16 @@ class InfoMediaFragment : Fragment() {
         super.onDetach()
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
-     */
-    interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
-    }
+
 
     companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private val ARG_PARAM1 = "param1"
-        private val ARG_PARAM2 = "param2"
 
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment InfoMediaFragment.
-         */
         // TODO: Rename and change types and number of parameters
-        fun newInstance(param1: String, param2: String): InfoMediaFragment {
+        fun newInstance(): InfoMediaFragment {
             val fragment = InfoMediaFragment()
 
             return fragment
         }
     }
 }// Required empty public constructor
+

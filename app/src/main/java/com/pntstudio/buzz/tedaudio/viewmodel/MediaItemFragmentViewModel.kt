@@ -69,6 +69,7 @@ public class MediaItemFragmentViewModel : ViewModel() {
         // fetch media here
         mediaList.value = list
 
+
     }
 
 

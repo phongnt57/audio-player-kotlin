@@ -10,7 +10,8 @@ data class MediaItemData
  var description: String? = null,
  var imageUrl: String? = null,
  var mp3Url: String? = null,
- var dateTime: String? = null):Serializable
+ var dateTime: String? = null,
+ var originLink:String? =null):Serializable
 
 
 

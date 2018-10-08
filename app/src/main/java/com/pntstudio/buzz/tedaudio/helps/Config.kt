@@ -10,7 +10,7 @@ class Config(val context: Context)  {
     }
 
     var isShuffleEnabled: Boolean
-        get() = prefs.getBoolean(SHUFFLE, true)
+        get() = prefs.getBoolean(SHUFFLE, false)
 
         set(shuffle) = prefs!!.edit().putBoolean(SHUFFLE, shuffle).apply()
 

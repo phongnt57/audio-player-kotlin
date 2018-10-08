@@ -12,6 +12,8 @@ import android.view.*
 import android.widget.SeekBar
 import com.example.android.uamp.viewmodels.MediaItemFragmentViewModel
 import com.pntstudio.buzz.tedaudio.fragment.DetailMediaListFragment
+import com.pntstudio.buzz.tedaudio.fragment.EnglishSubFragment
+import com.pntstudio.buzz.tedaudio.fragment.InfoMediaFragment
 import com.pntstudio.buzz.tedaudio.helps.*
 import com.pntstudio.buzz.tedaudio.model.Events
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
@@ -45,7 +47,7 @@ class DetailActivity : AppCompatActivity() {
         var listMedia = ArrayList<MediaItemData>()
         listMedia = intent.getSerializableExtra("list") as ArrayList<MediaItemData>
         val detail = intent.getSerializableExtra("detail") as MediaItemData
-        val position = intent.getIntExtra("position", 0);
+        val position = intent.getIntExtra(PLAYPOS, 0);
 
 
 //        setSupportActionBar(toolbar)
@@ -68,11 +70,12 @@ class DetailActivity : AppCompatActivity() {
         shuffle_btn.setOnClickListener { toggleShuffle() }
         previous_btn.setOnClickListener { sendIntent(PREVIOUS) }
         play_pause_btn.setOnClickListener { sendIntent(PLAYPAUSE) }
-        next_btn.setOnClickListener { sendIntent(NEXT) }
+        next_btn.setOnClickListener {
+            sendIntent(NEXT) }
         repeat_btn.setOnClickListener { toggleSongRepetition() }
         song_progress_current.setOnClickListener { sendIntent(SKIP_BACKWARD) }
         song_progress_max.setOnClickListener { sendIntent(SKIP_FORWARD) }
-        initSericePlayer()
+        initSericePlayer(position)
 
 
     }
@@ -115,11 +118,12 @@ class DetailActivity : AppCompatActivity() {
         })
     }
 
-    private fun initSericePlayer() {
+    private fun initSericePlayer(position:Int) {
         Intent(this, MusicService::class.java).apply {
             putExtra(SONG_POS, model.getSelecrNUmber().value)
             putExtra("list",model.getMediaList().value)
             putExtra("detail",model.getSelectedMedia().value)
+            putExtra(PLAYPOS,position)
             action = INIT
             startService(this)
         }
@@ -149,8 +153,9 @@ class DetailActivity : AppCompatActivity() {
     fun songChangedEvent(event: Events.SongChanged) {
         Log.e("change", "----");
         val song = event.song
-//        updateSongInfo(song)
-//        markCurrentSong()
+        if (song != null) {
+            model.setSelectedMedia(song)
+        }
 
     }
 
@@ -194,8 +199,8 @@ class DetailActivity : AppCompatActivity() {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             if (position == 0) return DetailMediaListFragment.newInstance()
-            else
-                return PlaceholderFragment.newInstance(position + 1)
+            else if(position==1) return InfoMediaFragment.newInstance()
+            else  return EnglishSubFragment.newInstance()
         }
 
         override fun getCount(): Int {

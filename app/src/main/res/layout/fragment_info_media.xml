@@ -2,12 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context="com.pntstudio.buzz.tedaudio.fragment.InfoMediaFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_marginTop="@dimen/fab_margin"
         android:id="@+id/titleTv"
+        android:textColor="@color/white"
         android:textAppearance="@style/TextAppearance.Uamp.Title"
        android:textSize="18sp"
         android:gravity="center"
@@ -22,6 +24,36 @@
         android:layout_width="160dp"
         android:src="@drawable/retro_radio"
         />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_alignParentBottom="true">
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_share"
+            android:layout_margin="@dimen/fab_margin"/>
+
+        <ImageView
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_video"
+            android:layout_margin="@dimen/fab_margin"/>
+        <ImageView
+            android:id="@+id/download_img"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_download"
+            android:layout_margin="@dimen/fab_margin"/>
+
+    </LinearLayout>
+
+
 
 
 
