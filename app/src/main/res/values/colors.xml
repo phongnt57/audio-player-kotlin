@@ -13,5 +13,8 @@
     <color name="pressed_item_foreground">#08000000</color>
     <color name="bg_blur">#80840255</color>
     <color name="white">#ffffff</color>
+    <color name="top_bg">#0F0F0F</color>
+    <color name="bottom_bg">#3F3030</color>
+
 
 </resources>

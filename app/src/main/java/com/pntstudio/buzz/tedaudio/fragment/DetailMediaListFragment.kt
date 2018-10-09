@@ -17,6 +17,7 @@ import com.pntstudio.buzz.tedaudio.helps.PLAYPOS
 import com.pntstudio.buzz.tedaudio.helps.SONG_POS
 import com.pntstudio.buzz.tedaudio.model.MediaItemAdapter
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
+import com.pntstudio.buzz.tedaudio.model.MediaItemDetailAdapter
 import com.pntstudio.buzz.tedaudio.services.MusicService
 import com.pntstudio.buzz.tedaudio.viewmodel.MediaListFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_meia_list.*
@@ -29,7 +30,7 @@ import kotlinx.android.synthetic.main.fragment_meia_list.*
  * Use the [DetailMediaListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DetailMediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
+class DetailMediaListFragment : Fragment(), MediaItemDetailAdapter.OnClickItem {
     override fun onClick(item: MediaItemData,position:Int) {
         mediaAdapter.currentItemSelect = position
         mediaAdapter.notifyDataSetChanged()
@@ -37,7 +38,7 @@ class DetailMediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
 
     }
 
-    private lateinit var mediaAdapter: MediaItemAdapter
+    private lateinit var mediaAdapter: MediaItemDetailAdapter
     private  lateinit var viewmodel: MediaItemFragmentViewModel
 
     private var mListener: OnFragmentInteractionListener? = null
@@ -50,7 +51,7 @@ class DetailMediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_meia_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_meia_list_in_detail, container, false)
         return view
     }
 
@@ -59,7 +60,7 @@ class DetailMediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
         mediaRv.setHasFixedSize(true);
         mediaRv.setLayoutManager(LinearLayoutManager(activity));
         viewmodel = ViewModelProviders.of(activity!!).get(MediaItemFragmentViewModel::class.java)
-        mediaAdapter = MediaItemAdapter(context!!, viewmodel.getMediaList().value!!, this@DetailMediaListFragment, viewmodel.getSelecrNUmber().value!!)
+        mediaAdapter = MediaItemDetailAdapter(context!!, viewmodel.getMediaList().value!!, this@DetailMediaListFragment, viewmodel.getSelecrNUmber().value!!)
         mediaRv.adapter = mediaAdapter
         viewmodel.getSelectedMedia().observe(this,object :Observer<MediaItemData>{
             override fun onChanged(t: MediaItemData?) {

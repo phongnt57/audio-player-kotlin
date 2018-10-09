@@ -25,10 +25,10 @@ class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractio
 //                message.setText(R.string.title_dashboard)
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
-//                message.setText(R.string.title_notifications)
-                return@OnNavigationItemSelectedListener true
-            }
+//            R.id.navigation_notifications -> {
+////                message.setText(R.string.title_notifications)
+//                return@OnNavigationItemSelectedListener true
+//            }
         }
         false
     }

@@ -5,7 +5,6 @@ package com.pntstudio.buzz.tedaudio.viewmodel
  */
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import Api
 import android.arch.lifecycle.LiveData
 import android.util.Log
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
@@ -16,6 +15,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.google.gson.GsonBuilder
 import com.google.gson.Gson
+import com.pntstudio.buzz.tedaudio.retrofit.Api
 import com.pntstudio.buzz.tedaudio.rssparse.RssReader
 import retrofit2.converter.scalars.ScalarsConverterFactory
 

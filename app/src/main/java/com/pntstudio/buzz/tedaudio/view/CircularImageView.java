@@ -26,8 +26,9 @@ import static android.widget.ImageView.ScaleType.CENTER_INSIDE;
 public class CircularImageView extends AppCompatImageView {
 
     // Default Values
-    private static final float DEFAULT_BORDER_WIDTH = 4;
-    private static final float DEFAULT_SHADOW_RADIUS = 8.0f;
+    private static final float DEFAULT_BORDER_WIDTH = 0;
+
+    private static final float DEFAULT_SHADOW_RADIUS = 0.0f;
 
     // Properties
     private float borderWidth;

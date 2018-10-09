@@ -16,12 +16,7 @@ import com.tonyodev.fetch2.Priority
 import com.tonyodev.fetch2.Request
 import kotlinx.android.synthetic.main.fragment_info_media.*
 import com.tonyodev.fetch2.Fetch
-import com.tonyodev.fetch2.Fetch
 import com.tonyodev.fetch2.FetchConfiguration
-
-
-
-
 
 /**
  * A simple [Fragment] subclass.
@@ -63,10 +58,6 @@ class InfoMediaFragment : Fragment() {
         val request = Request(viewmodel.getSelectedMedia().value!!.mp3Url!!, "")
         request.priority = Priority.HIGH
         request.networkType = NetworkType.ALL
-        fetch!!.enqueue(request, error(){
-
-
-        })
 
     }
 
@@ -84,7 +75,6 @@ class InfoMediaFragment : Fragment() {
 
     companion object {
 
-        // TODO: Rename and change types and number of parameters
         fun newInstance(): InfoMediaFragment {
             val fragment = InfoMediaFragment()
 

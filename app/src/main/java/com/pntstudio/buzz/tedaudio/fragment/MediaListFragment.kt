@@ -6,20 +6,21 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 
 import com.pntstudio.buzz.tedaudio.R
 import kotlinx.android.synthetic.main.fragment_meia_list.*
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.view.*
 import com.pntstudio.buzz.tedaudio.DetailActivity
 import com.pntstudio.buzz.tedaudio.MainActivity
 import com.pntstudio.buzz.tedaudio.helps.PLAYPOS
 import com.pntstudio.buzz.tedaudio.viewmodel.MediaListFragmentViewModel
 import com.pntstudio.buzz.tedaudio.model.MediaItemAdapter
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
+import android.support.v7.app.AppCompatActivity
+
+
 
 
 /**
@@ -68,6 +69,10 @@ class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+        toolbar.setTitle("Audio")
+
+
         mediaRv.setHasFixedSize(true);
         mediaRv.setLayoutManager( LinearLayoutManager(activity));
         viewmodel = ViewModelProviders.of(this).get(MediaListFragmentViewModel::class.java)
@@ -104,6 +109,13 @@ class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
     override fun onDetach() {
         super.onDetach()
         mListener = null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+//        super.onCreateOptionsMenu(menu, inflater)
+//        activity!!.getMenuInflater().inflate(R.menu.menu_dashboard, menu);
+
+
     }
 
     /**

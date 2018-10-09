@@ -17,13 +17,13 @@ import com.pntstudio.buzz.tedaudio.R
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
 
 
-public class MediaItemAdapter(internal var mCtx: Context, internal var heroList: ArrayList<MediaItemData>,
+public class MediaItemDetailAdapter(internal var mCtx: Context, internal var heroList: ArrayList<MediaItemData>,
                               internal var onClickItem: OnClickItem,
                               internal var currentItemSelect: Int
-) : RecyclerView.Adapter<MediaItemAdapter.HeroViewHolder>() {
+) : RecyclerView.Adapter<MediaItemDetailAdapter.HeroViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeroViewHolder {
-        val view = LayoutInflater.from(mCtx).inflate(R.layout.fragment_mediaitem, parent, false)
+        val view = LayoutInflater.from(mCtx).inflate(R.layout.fragment_mediaitem_detail, parent, false)
         return HeroViewHolder(view)
     }
 
@@ -40,10 +40,10 @@ public class MediaItemAdapter(internal var mCtx: Context, internal var heroList:
             onClickItem.onClick(hero,position)
         }
         if(position==currentItemSelect){
-            holder.itemLayout.setBackgroundResource(R.drawable.media_item_background_click)
+//            holder.itemLayout.setBackgroundResource(R.drawable.media_item_background_click)
 
         }else{
-            holder.itemLayout.setBackgroundResource(R.drawable.media_item_background)
+//            holder.itemLayout.setBackgroundResource(R.drawable.media_item_background)
 
 
         }
