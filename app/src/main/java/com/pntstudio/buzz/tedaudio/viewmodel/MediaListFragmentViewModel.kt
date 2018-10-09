@@ -24,6 +24,15 @@ class MediaListFragmentViewModel : ViewModel() {
 
     //this is the data that we will fetch asynchronously
     private var heroList: MutableLiveData<ArrayList<MediaItemData>> = MutableLiveData()
+    private var textSearch: MutableLiveData<String>  = MutableLiveData()
+
+
+    fun getTextSearch(): MutableLiveData<String> {
+        return textSearch
+    }
+    fun setTextSearch(text: String){
+        textSearch.value = text
+    }
 
 
     //we will call this method to get the data

@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.*
 import android.widget.SeekBar
 import com.example.android.uamp.viewmodels.MediaItemFragmentViewModel
+import com.google.android.exoplayer2.offline.DownloadService
 import com.pntstudio.buzz.tedaudio.fragment.DetailMediaListFragment
 import com.pntstudio.buzz.tedaudio.fragment.EnglishSubFragment
 import com.pntstudio.buzz.tedaudio.fragment.InfoMediaFragment
@@ -119,6 +120,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun initSericePlayer(position:Int) {
+
         Intent(this, MusicService::class.java).apply {
             putExtra(SONG_POS, model.getSelecrNUmber().value)
             putExtra("list",model.getMediaList().value)

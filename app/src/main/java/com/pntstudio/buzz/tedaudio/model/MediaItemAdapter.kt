@@ -1,26 +1,60 @@
 package com.pntstudio.buzz.tedaudio.model
 
 import android.content.Context
-import android.os.Parcelable
 import android.support.constraint.ConstraintLayout
-import android.support.design.widget.CoordinatorLayout
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
 
 import com.bumptech.glide.Glide
 import com.pntstudio.buzz.tedaudio.R
-import com.pntstudio.buzz.tedaudio.model.MediaItemData
+import android.graphics.Movie
 
 
-public class MediaItemAdapter(internal var mCtx: Context, internal var heroList: ArrayList<MediaItemData>,
+
+
+
+
+public class MediaItemAdapter(internal var mCtx: Context,
+                              internal var heroList: ArrayList<MediaItemData>,
+                              internal var heroListFilter: ArrayList<MediaItemData>,
                               internal var onClickItem: OnClickItem,
                               internal var currentItemSelect: Int
-) : RecyclerView.Adapter<MediaItemAdapter.HeroViewHolder>() {
+) : RecyclerView.Adapter<MediaItemAdapter.HeroViewHolder>(),Filterable {
+    override fun getFilter(): Filter {
+        return object :Filter(){
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charString = constraint.toString()
+                if (charString.isEmpty()) {
+                    heroListFilter = heroList
+                } else {
+                    val filteredList: ArrayList<MediaItemData> = arrayListOf()
+                    for (item in heroList) {
+                        if (item.title!!.toLowerCase().contains(charString.toLowerCase())) {
+                            filteredList.add(item)
+                        }
+                    }
+                    heroListFilter = filteredList
+                }
+
+                val filterResults = FilterResults()
+                filterResults.values = heroListFilter
+                return filterResults
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                heroListFilter = results!!.values as ArrayList<MediaItemData>
+                notifyDataSetChanged()
+            }
+
+        }
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeroViewHolder {
         val view = LayoutInflater.from(mCtx).inflate(R.layout.fragment_mediaitem, parent, false)
@@ -28,7 +62,7 @@ public class MediaItemAdapter(internal var mCtx: Context, internal var heroList:
     }
 
     override fun onBindViewHolder(holder: HeroViewHolder, position: Int) {
-        val hero = heroList[position]
+        val hero = heroListFilter[position]
 
         Glide.with(mCtx)
                 .load(hero.imageUrl)
@@ -45,12 +79,11 @@ public class MediaItemAdapter(internal var mCtx: Context, internal var heroList:
         }else{
             holder.itemLayout.setBackgroundResource(R.drawable.media_item_background)
 
-
         }
     }
 
     override fun getItemCount(): Int {
-        return heroList.size
+        return heroListFilter.size
     }
     fun setCurrentSelect(item: Int){
         currentItemSelect = item

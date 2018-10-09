@@ -2,6 +2,7 @@ package com.pntstudio.buzz.tedaudio.fragment
 
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -11,9 +12,9 @@ import android.view.ViewGroup
 import com.example.android.uamp.viewmodels.MediaItemFragmentViewModel
 
 import com.pntstudio.buzz.tedaudio.R
-import com.tonyodev.fetch2.NetworkType
-import com.tonyodev.fetch2.Priority
-import com.tonyodev.fetch2.Request
+import com.pntstudio.buzz.tedaudio.model.Download
+import com.pntstudio.buzz.tedaudio.services.DownloadService
+
 import kotlinx.android.synthetic.main.fragment_info_media.*
 import com.tonyodev.fetch2.Fetch
 import com.tonyodev.fetch2.FetchConfiguration
@@ -52,12 +53,15 @@ class InfoMediaFragment : Fragment() {
 
 
         download_img.setOnClickListener { downLoadFile() }
+
     }
 
     private fun downLoadFile() {
-        val request = Request(viewmodel.getSelectedMedia().value!!.mp3Url!!, "")
-        request.priority = Priority.HIGH
-        request.networkType = NetworkType.ALL
+        val download = Download(viewmodel.getSelectedMedia().value!!.mp3Url!!,"","",0,0)
+        val intent = Intent(activity, DownloadService::class.java)
+        intent.putExtra("download",download)
+        activity!!.startService(intent)
+
 
     }
 

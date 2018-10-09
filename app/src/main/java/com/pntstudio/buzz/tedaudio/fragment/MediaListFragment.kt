@@ -69,20 +69,25 @@ class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        toolbar.setTitle("Audio")
+//        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+//        toolbar.setTitle("Audio")
 
 
         mediaRv.setHasFixedSize(true);
         mediaRv.setLayoutManager( LinearLayoutManager(activity));
-        viewmodel = ViewModelProviders.of(this).get(MediaListFragmentViewModel::class.java)
-        viewmodel.heroes.observe(this, object : Observer<ArrayList<MediaItemData>> {
+        viewmodel = ViewModelProviders.of(activity!!).get(MediaListFragmentViewModel::class.java)
+        viewmodel.heroes.observe(activity!!, object : Observer<ArrayList<MediaItemData>> {
             override fun onChanged(t: ArrayList<MediaItemData>?) {
-                mediaAdapter = MediaItemAdapter(context!!, t!!,this@MediaListFragment,-1)
+                mediaAdapter = MediaItemAdapter(context!!, t!!,t,this@MediaListFragment,-1)
                 mediaRv.adapter = mediaAdapter
             }
 
 
+        })
+        viewmodel.getTextSearch().observe(activity!!,object : Observer<String> {
+            override fun onChanged(t: String?) {
+                mediaAdapter.filter.filter(t)
+            }
         })
     }
 

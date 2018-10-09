@@ -1,14 +1,24 @@
 package com.pntstudio.buzz.tedaudio
 
+import android.arch.lifecycle.ViewModelProviders
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.SearchView
+import android.view.Menu
+import android.view.SearchEvent
 import com.pntstudio.buzz.tedaudio.fragment.MediaListFragment
+import com.pntstudio.buzz.tedaudio.viewmodel.MediaListFragmentViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import android.support.v4.view.MenuItemCompat.getActionView
+
+
 
 class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractionListener {
+    private  lateinit var viewmodel: MediaListFragmentViewModel
+
 
     override fun onFragmentInteraction(uri: Uri) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -36,10 +46,42 @@ class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractio
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar);
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         val fragment = MediaListFragment.Companion.newInstance()
         addFragment(fragment)
+        viewmodel = ViewModelProviders.of(this).get(MediaListFragmentViewModel::class.java)
 
+
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dashboard, menu);
+        val searchItem = menu!!.findItem(R.id.action_search)
+        val searchView = searchItem.getActionView() as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                // Toast like print
+//                UserFeedback.show("SearchOnQueryTextSubmit: " + query)
+//                if (!searchView.isIconified) {
+//                    searchView.isIconified = true
+//                }
+//                searchView.onActionViewCollapsed()
+                viewmodel.setTextSearch(query)
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+                viewmodel.setTextSearch(s)
+                return false
+            }
+        })
+
+
+        return true;
 
     }
 
