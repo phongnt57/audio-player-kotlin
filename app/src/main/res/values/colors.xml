@@ -15,6 +15,7 @@
     <color name="white">#ffffff</color>
     <color name="top_bg">#0F0F0F</color>
     <color name="bottom_bg">#3F3030</color>
+    <color name="player_color">#1A1A1C</color>
 
 
 </resources>

@@ -57,7 +57,7 @@ class InfoMediaFragment : Fragment() {
     }
 
     private fun downLoadFile() {
-        val download = Download(viewmodel.getSelectedMedia().value!!.mp3Url!!,"","",0,0)
+        val download = Download(viewmodel.getSelectedMedia().value!!.title!!,viewmodel.getSelectedMedia().value!!.mp3Url!!,"",0,0)
         val intent = Intent(activity, DownloadService::class.java)
         intent.putExtra("download",download)
         activity!!.startService(intent)

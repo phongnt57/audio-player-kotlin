@@ -6,7 +6,6 @@
     android:paddingTop="5dp"
     android:paddingLeft="@dimen/padding_small"
     android:paddingRight="@dimen/padding_small"
-    android:background="#1A1A1C"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/medium_margin">

@@ -15,6 +15,8 @@ import com.pntstudio.buzz.tedaudio.model.MediaItemData
 import com.pntstudio.buzz.tedaudio.retrofit.Api
 import retrofit2.Retrofit
 import android.app.NotificationManager
+import android.os.Environment
+import android.util.Log
 import okhttp3.ResponseBody
 import com.pntstudio.buzz.tedaudio.helps.ProgressResponseBody
 import javax.xml.datatype.DatatypeConstants.SECONDS
@@ -22,7 +24,9 @@ import okhttp3.OkHttpClient
 import com.pntstudio.buzz.tedaudio.helps.OnAttachmentDownloadListener
 import okhttp3.Interceptor
 import okhttp3.Response
-import java.io.IOException
+import retrofit2.Call
+import retrofit2.Callback
+import java.io.*
 import java.util.concurrent.TimeUnit
 
 
@@ -30,29 +34,38 @@ import java.util.concurrent.TimeUnit
  * Created by admin on 10/8/18.
  */
 class DownloadService : IntentService("Dowload Service"),OnAttachmentDownloadListener{
+
     override fun onAttachmentDownloadedError() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onAttachmentDownloadedFinished() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onAttachmentDownloadUpdate(percent: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.e(TAG,download.progess.toString())
+        download.progess = percent
+        sendNotification(download)
     }
 
     override fun onAttachmentDownloadedSuccess() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    var notificationManager: NotificationManager? = null
-     var notificationBuilder: NotificationCompat.Builder? = null
+    private var notificationManager: NotificationManager? = null
+    private var notificationBuilder: NotificationCompat.Builder? = null
+    private  lateinit var download: Download
+    private val outputFolder = "TED audio"
+    private val outputRoot = File(Environment.getExternalStorageDirectory(), outputFolder)
+    private val TAG = "Download service"
+
 
 
     lateinit var api: Api
     override fun onCreate() {
         super.onCreate()
+        if (!outputRoot.exists() && !outputRoot.mkdirs()) {
+            return
+        }
 
 
 
@@ -61,8 +74,7 @@ class DownloadService : IntentService("Dowload Service"),OnAttachmentDownloadLis
 
     override fun onHandleIntent(intent: Intent?) {
         // Normally we would do some work here, like download a file.
-        // For our sample, we just sleep for 5 seconds.
-        val download = intent!!.getSerializableExtra("download") as Download
+         download = intent!!.getSerializableExtra("download") as Download
         notificationManager =  getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager;
 
         val channelId =
@@ -74,8 +86,8 @@ class DownloadService : IntentService("Dowload Service"),OnAttachmentDownloadLis
 
         notificationBuilder = NotificationCompat.Builder(this,channelId)
                 .setSmallIcon(R.drawable.ic_download)
-                .setContentTitle("Download")
-                .setContentText(download.link)
+                .setContentTitle("Downloading")
+                .setContentText(download.title)
                 .setAutoCancel(true)
         notificationManager!!.notify(101, notificationBuilder!!.build())
 
@@ -89,14 +101,37 @@ class DownloadService : IntentService("Dowload Service"),OnAttachmentDownloadLis
         notificationManager!!.notify(101, notificationBuilder!!.build())
     }
 
+    private fun onDownloadComplete() {
+        Log.e(TAG,"download complete")
+        download.progess = 100
+//        sendIntent(download)
+        notificationManager!!.cancel(101)
+        notificationBuilder!!.setContentTitle("Download success")
+        notificationBuilder!!.setProgress(0, 0, false)
+        notificationManager!!.notify(101, notificationBuilder!!.build())
+
+    }
+
+
     private fun initDownload(download: Download) {
         val retrofit = Retrofit.Builder()
                 .baseUrl(Api.BASE_URL)
                 .client(getOkHttpDownloadClientBuilder(this).build())
-
                 .build()
         api = retrofit.create(Api::class.java)
         val request = api.downloadFile(download.link)
+        request.enqueue(object :Callback<ResponseBody>{
+            override fun onFailure(call: Call<ResponseBody>?, t: Throwable?) {
+                Log.e(TAG,t.toString())
+
+
+            }
+
+            override fun onResponse(call: Call<ResponseBody>?, response: retrofit2.Response<ResponseBody>?) {
+                writeResponseBodyToDisk(response!!.body()!!)
+            }
+
+        })
 
 
 
@@ -135,6 +170,61 @@ class DownloadService : IntentService("Dowload Service"),OnAttachmentDownloadLis
         chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
         notificationManager!!.createNotificationChannel(chan)
         return channelId
+    }
+
+    private fun writeResponseBodyToDisk(body: ResponseBody): Boolean {
+        try {
+            // todo change the file location/name according to your needs
+            val futureStudioIconFile = File(outputRoot,download.title+".mp3")
+
+            var inputStream: InputStream? = null
+            var outputStream: OutputStream? = null
+
+            try {
+                val fileReader = ByteArray(4096)
+
+                val fileSize = body.contentLength()
+                var fileSizeDownloaded: Long = 0
+
+                inputStream = body.byteStream()
+                outputStream = FileOutputStream(futureStudioIconFile)
+
+                while (true) {
+                    val read = inputStream!!.read(fileReader)
+
+                    if (read == -1) {
+                        break
+                    }
+
+                    outputStream.write(fileReader, 0, read)
+
+                    fileSizeDownloaded += read.toLong()
+
+                    Log.e(TAG, "file download: $fileSizeDownloaded of $fileSize")
+                }
+
+                outputStream.flush()
+                onDownloadComplete()
+                return true
+            } catch (e: IOException) {
+                return false
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close()
+                }
+
+                if (outputStream != null) {
+                    outputStream.close()
+                }
+            }
+        } catch (e: IOException) {
+            return false
+        }
+
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent) {
+        notificationManager!!.cancel(101)
     }
 
 }
