@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#840255</color>
-    <color name="colorPrimaryDark">#710144</color>
+    <color name="colorPrimary">#253753</color>
+    <color name="colorPrimaryDark">#0C1834</color>
     <color name="colorAccent">#14A5A1</color>
     <color name="transparent">#00000000</color>
     <color name="mediaListBackground">#F1F1F1</color>

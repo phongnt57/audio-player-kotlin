@@ -39,7 +39,7 @@ const val IGNORED_PATHS = "ignored_paths"
 const val CURRENT_PLAYLIST = "current_playlist"
 const val SHOW_FILENAME = "show_filename"
 const val SHOW_ALBUM_COVER = "show_album_cover"
-const val WERE_SONGS_MIGRATED = "were_songs_migrated"   // check migration from old sqlite to Room
+const val ALARM_TURN_OFF = "alarm turn off";
 
 const val LIST_HEADERS_COUNT = 2
 const val LOWER_ALPHA = 0.5f
@@ -50,4 +50,7 @@ const val SHOW_FILENAME_ALWAYS = 3
 
 const val TYPE_FILE = 1
 const val TYPE_FOLDER = 2
+
+val TIME_MAP = mapOf(0 to 1, 1 to 20, 2 to 30 , 3 to 40, 4 to 50, 5 to 60)
+
 

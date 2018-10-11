@@ -11,6 +11,9 @@
         android:fillViewport="true"
         >
     <TextView
+        android:textSize="13sp"
+        android:lineSpacingExtra="8dp"
+        android:layout_margin="@dimen/fab_margin"
         android:textAppearance="@style/TextAppearance.Uamp.Subtitle"
        android:textColor="@color/white"
         android:id="@+id/transcript_tv"

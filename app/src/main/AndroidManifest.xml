@@ -73,6 +73,14 @@
         </receiver>
 
         <receiver android:name=".receiver.ControlActionsListener"/>
+
+        <receiver android:name=".receiver.TurnOffServiceReceiver">
+            <intent-filter>
+                <action android:name="STOP_TEST_SERVICE" />
+                <action android:name="START_TEST_SERVICE" />
+
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

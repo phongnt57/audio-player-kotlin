@@ -30,6 +30,10 @@ class Config(val context: Context)  {
         get() = prefs.getBoolean(AUTOPLAY, true)
         set(autoplay) = prefs.edit().putBoolean(AUTOPLAY, autoplay).apply()
 
+    var alarm_turn_off: Boolean
+        get() = prefs.getBoolean(ALARM_TURN_OFF, false)
+        set(alarm_turn_off) = prefs.edit().putBoolean(ALARM_TURN_OFF, alarm_turn_off).apply()
+
 
 
 

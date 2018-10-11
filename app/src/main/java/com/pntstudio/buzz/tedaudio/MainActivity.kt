@@ -8,11 +8,9 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
 import android.view.Menu
-import android.view.SearchEvent
 import com.pntstudio.buzz.tedaudio.fragment.MediaListFragment
 import com.pntstudio.buzz.tedaudio.viewmodel.MediaListFragmentViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import android.support.v4.view.MenuItemCompat.getActionView
 
 
 

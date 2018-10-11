@@ -24,6 +24,17 @@ import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.tem_media_controller.*
+import android.app.AlarmManager
+import android.os.Build
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Context.ALARM_SERVICE
+import java.util.*
+import android.content.DialogInterface
+import android.R.array
+import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.support.v4.content.ContextCompat
 
 
 class DetailActivity : AppCompatActivity() {
@@ -39,16 +50,23 @@ class DetailActivity : AppCompatActivity() {
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     lateinit var bus: Bus
     lateinit var model: MediaItemFragmentViewModel
+    lateinit var alarm: AlarmManager
+    lateinit var pendingIntent:PendingIntent
+     var timeInterval = 0L
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+         alarm = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+         pendingIntent = PendingIntent.getBroadcast(applicationContext, 0,
+                Intent().setAction("STOP_TEST_SERVICE"), PendingIntent.FLAG_UPDATE_CURRENT)
 
         var listMedia = ArrayList<MediaItemData>()
         listMedia = intent.getSerializableExtra("list") as ArrayList<MediaItemData>
         val detail = intent.getSerializableExtra("detail") as MediaItemData
         val position = intent.getIntExtra(PLAYPOS, 0);
+        setSupportActionBar(tool_bar)
 
 
 //        setSupportActionBar(toolbar)
@@ -77,6 +95,8 @@ class DetailActivity : AppCompatActivity() {
         song_progress_current.setOnClickListener { sendIntent(SKIP_BACKWARD) }
         song_progress_max.setOnClickListener { sendIntent(SKIP_FORWARD) }
         initSericePlayer(position)
+        tabDots.setupWithViewPager(container,true)
+        container.offscreenPageLimit = 3
 
 
     }
@@ -135,21 +155,73 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_detail, menu)
+        if(config.alarm_turn_off)
+            menu.getItem(0).icon = ContextCompat.getDrawable(this,R.drawable.ic_alarm_clock_selected)
         return true
     }
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
 
-        if (id == R.id.action_settings) {
+        val id = item.itemId
+        if (id == R.id.action_alarm) {
+            if(!config.alarm_turn_off) {
+                // not set alarm yet
+                val singleChoiceItems = resources.getStringArray(R.array.dialog_alarm_str)
+                val itemSelected = 0
+                AlertDialog.Builder(this)
+                        .setTitle("Select time to turn off ")
+                        .setSingleChoiceItems(singleChoiceItems, itemSelected, DialogInterface.OnClickListener
+                        { dialogInterface, selectedIndex -> setStopServiceAlarm(selectedIndex,item) })
+                        .setPositiveButton("Ok", null)
+                        .setNegativeButton("Cancel", null)
+                        .show()
+            }else{
+                // already set alarm
+                AlertDialog.Builder(this)
+                        .setTitle("Cancel alarm turn off")
+                        .setMessage("Audio will turn off in "+ convertLongToTime(timeInterval))
+                        .setPositiveButton("Yes") { dialog, which -> cancelAlarm(item) }
+                        .setNegativeButton("No") { dialog, which -> Log.d("MainActivity", "Aborting mission...") }
+                        .show()
+
+
+
+            }
+
             return true
         }
 
         return super.onOptionsItemSelected(item)
     }
+
+    fun  cancelAlarm(item: MenuItem){
+        config.alarm_turn_off = false
+        item.icon = ContextCompat.getDrawable(this,R.drawable.ic_alarm_clock)
+        alarm.cancel(pendingIntent)
+    }
+
+    fun setStopServiceAlarm(index:Int,item: MenuItem) {
+        item.icon = ContextCompat.getDrawable(this,R.drawable.ic_alarm_clock_selected)
+        config.alarm_turn_off = true
+        timeInterval = TIME_MAP.get(index)!! * 60 * 1000L + System.currentTimeMillis()
+        val calendar = Calendar.getInstance()
+        calendar.setTimeInMillis(timeInterval)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent)
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarm.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent)
+        } else {
+            alarm.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent)
+        }
+    }
+
 
     @Subscribe
     fun songChangedEvent(event: Events.SongChanged) {
@@ -157,6 +229,7 @@ class DetailActivity : AppCompatActivity() {
         val song = event.song
         if (song != null) {
             model.setSelectedMedia(song)
+            tool_bar.setTitle(song.title)
         }
 
     }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <declare-styleable name="CircularImageView">
         <attr name="civ_border" format="boolean" />
         <attr name="civ_border_width" format="dimension" />
@@ -16,4 +17,21 @@
             <flag name="end" value="5" />
         </attr>
     </declare-styleable>
+
+
+    <string-array name="dialog_alarm_str" >
+        <item>10 mintutes</item>
+        <item>20 minutes</item>
+        <item>30 minutes</item>
+        <item>40 minutes</item>
+        <item>50 minutes</item>
+        <item>60 minutes</item>
+
+
+
+    </string-array>
+
+    <attr name="dialog_alarm" >
+
+    </attr>
 </resources>

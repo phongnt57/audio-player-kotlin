@@ -1,23 +1,29 @@
 package com.pntstudio.buzz.tedaudio.fragment
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import com.example.android.uamp.viewmodels.MediaItemFragmentViewModel
 
 import com.pntstudio.buzz.tedaudio.R
 import com.pntstudio.buzz.tedaudio.model.Download
+import com.pntstudio.buzz.tedaudio.model.MediaItemData
 import com.pntstudio.buzz.tedaudio.services.DownloadService
 
 import kotlinx.android.synthetic.main.fragment_info_media.*
 import com.tonyodev.fetch2.Fetch
 import com.tonyodev.fetch2.FetchConfiguration
+import kotlinx.android.synthetic.main.fragment_english_sub.*
+import org.jsoup.Jsoup
 
 /**
  * A simple [Fragment] subclass.
@@ -46,10 +52,18 @@ class InfoMediaFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewmodel = ViewModelProviders.of(activity!!).get(MediaItemFragmentViewModel::class.java)
-        val fetchConfiguration = FetchConfiguration.Builder(activity!!)
-                .setDownloadConcurrentLimit(3)
-                .build()
-        fetch = Fetch.getInstance(fetchConfiguration)
+
+        viewmodel.getSelectedMedia().observe(this,object : Observer<MediaItemData> {
+            override fun onChanged(t: MediaItemData?) {
+                Glide.with(activity!!)
+                        .load(t!!.imageUrl)
+                        .into(cover_img)
+                title_tv.setText(t.description)
+
+            }
+
+        })
+
 
 
         download_img.setOnClickListener { downLoadFile() }

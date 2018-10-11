@@ -19,6 +19,9 @@ import com.pntstudio.buzz.tedaudio.viewmodel.MediaListFragmentViewModel
 import com.pntstudio.buzz.tedaudio.model.MediaItemAdapter
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
+
+
 
 
 
@@ -71,10 +74,27 @@ class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
         super.onViewCreated(view, savedInstanceState)
 //        (activity as AppCompatActivity).setSupportActionBar(toolbar)
 //        toolbar.setTitle("Audio")
+        val linearLayoutMamanger = LinearLayoutManager(activity)
 
-
+        up_button.hide()
+        up_button.setOnClickListener { linearLayoutMamanger.smoothScrollToPosition(mediaRv, null, 0);
+        }
         mediaRv.setHasFixedSize(true);
-        mediaRv.setLayoutManager( LinearLayoutManager(activity));
+        mediaRv.setLayoutManager(linearLayoutMamanger);
+        mediaRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                if (dy > 0 || dy < 0 && up_button.isShown())
+                    up_button.hide()
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE &&linearLayoutMamanger.findFirstCompletelyVisibleItemPosition() > 3) {
+                    up_button.show()
+                }
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
         viewmodel = ViewModelProviders.of(activity!!).get(MediaListFragmentViewModel::class.java)
         viewmodel.heroes.observe(activity!!, object : Observer<ArrayList<MediaItemData>> {
             override fun onChanged(t: ArrayList<MediaItemData>?) {
