@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     tools:context="com.pntstudio.buzz.tedaudio.fragment.InfoMediaFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -16,14 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/hello_blank_fragment" />
-    <com.pntstudio.buzz.tedaudio.view.CircularImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/cover_img"
         android:layout_marginTop="@dimen/margin_large"
         android:layout_below="@+id/title_tv"
         android:layout_centerHorizontal="true"
         android:layout_height="200dp"
         android:layout_width="200dp"
-        android:src="@drawable/retro_radio"
+        android:src="@drawable/ic_album_black_24dp"
         />
     <LinearLayout
         android:layout_width="match_parent"

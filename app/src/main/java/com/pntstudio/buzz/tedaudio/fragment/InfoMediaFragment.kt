@@ -20,8 +20,6 @@ import com.pntstudio.buzz.tedaudio.model.MediaItemData
 import com.pntstudio.buzz.tedaudio.services.DownloadService
 
 import kotlinx.android.synthetic.main.fragment_info_media.*
-import com.tonyodev.fetch2.Fetch
-import com.tonyodev.fetch2.FetchConfiguration
 import kotlinx.android.synthetic.main.fragment_english_sub.*
 import org.jsoup.Jsoup
 
@@ -35,7 +33,6 @@ import org.jsoup.Jsoup
  */
 class InfoMediaFragment : Fragment() {
     private  lateinit var viewmodel: MediaItemFragmentViewModel
-    private var fetch: Fetch? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

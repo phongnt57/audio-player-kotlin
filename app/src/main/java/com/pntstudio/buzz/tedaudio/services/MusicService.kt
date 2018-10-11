@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.media.AudioManager.*
@@ -61,6 +62,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         private var mediaSession: MediaSessionCompat? = null
         private var isServiceInitialized = false
         private var prevAudioFocusState = 0
+        private lateinit var mCurrSongCover: Bitmap;
 
         fun getIsPlaying() = mPlayer?.isPlaying == true
     }
@@ -282,7 +284,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
     @SuppressLint("NewApi")
     private fun setupNotification() {
         val title = mCurrSong?.title ?: ""
-        val artist = mCurrSong?.description ?: ""
+//        val artist = mCurrSong?.description ?: ""
         val playPauseIcon = if (getIsPlaying()) R.drawable.exo_icon_pause else R.drawable.exo_icon_play
 
         var notifWhen = 0L
@@ -311,12 +313,14 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
 //        if (mCurrSongCover?.isRecycled == true) {
 //            mCurrSongCover = resources.getColoredBitmap(R.drawable.ic_headset, config.textColor)
 //        }
+        val mCurrSongCover = BitmapFactory.decodeResource(getResources(),
+                R.drawable.ic_album_black_24dp)
 
         val notification = NotificationCompat.Builder(applicationContext, channelId)
                 .setContentTitle(title)
-                .setContentText(artist)
+//                .setContentText(artist)
                 .setSmallIcon(R.drawable.ic_headset_small)
-//                .setLargeIcon(mCurrSongCover)
+                .setLargeIcon(mCurrSongCover)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setWhen(notifWhen)
