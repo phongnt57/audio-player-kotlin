@@ -2,20 +2,30 @@ package com.pntstudio.buzz.tedaudio
 
 import android.arch.lifecycle.ViewModelProviders
 import android.net.Uri
+import android.opengl.Visibility
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.Menu
+import android.view.View
 import com.pntstudio.buzz.tedaudio.fragment.MediaListFragment
+import com.pntstudio.buzz.tedaudio.helps.BusProvider
+import com.pntstudio.buzz.tedaudio.model.Events
 import com.pntstudio.buzz.tedaudio.viewmodel.MediaListFragmentViewModel
+import com.squareup.otto.Bus
+import com.squareup.otto.Subscribe
+import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 
 class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractionListener {
     private  lateinit var viewmodel: MediaListFragmentViewModel
+    lateinit var bus: Bus
+
 
 
     override fun onFragmentInteraction(uri: Uri) {
@@ -50,6 +60,9 @@ class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractio
         val fragment = MediaListFragment.Companion.newInstance()
         addFragment(fragment)
         viewmodel = ViewModelProviders.of(this).get(MediaListFragmentViewModel::class.java)
+        playing_layout.visibility = View.GONE
+        bus = BusProvider.instance
+        bus.register(this)
 
 
 
@@ -80,6 +93,22 @@ class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractio
 
 
         return true;
+
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        bus.unregister(this)
+
+    }
+    @Subscribe
+    fun songChangedEvent(event: Events.SongChanged) {
+        Log.e("change", "----");
+        val song = event.song
+        if (song != null) {
+            playing_layout.visibility = View.VISIBLE
+            playing_song_tv.setText(song.title)
+            playing_song_tv.setSelected(true)
+        }
 
     }
 

@@ -16,27 +16,8 @@
 
 package com.example.android.uamp.viewmodels
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.MediaBrowserCompat.MediaItem
-import android.support.v4.media.MediaBrowserCompat.SubscriptionCallback
-import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
-import com.example.android.uamp.EMPTY_PLAYBACK_STATE
-
-import com.example.android.uamp.MediaSessionConnection
-import com.example.android.uamp.NOTHING_PLAYING
-
-import com.example.android.uamp.media.extensions.id
-import com.example.android.uamp.media.extensions.isPlayEnabled
-import com.example.android.uamp.media.extensions.isPlaying
-import com.pntstudio.buzz.tedaudio.R
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
 
 /**
@@ -49,10 +30,12 @@ public class MediaItemFragmentViewModel : ViewModel() {
     fun getSelectedMedia(): MutableLiveData<MediaItemData> {
         return selectedArticle
     }
-    fun setSelectNumber(number: Int){
+
+    fun setSelectNumber(number: Int) {
         selectNumber.value = number
     }
-    fun getSelecrNUmber():MutableLiveData<Int> {
+
+    fun getSelecrNUmber(): MutableLiveData<Int> {
         return selectNumber
     }
 
@@ -65,7 +48,7 @@ public class MediaItemFragmentViewModel : ViewModel() {
         return mediaList
     }
 
-    fun loadMediaItems(list:ArrayList<MediaItemData>) {
+    fun loadMediaItems(list: ArrayList<MediaItemData>) {
         // fetch media here
         mediaList.value = list
 

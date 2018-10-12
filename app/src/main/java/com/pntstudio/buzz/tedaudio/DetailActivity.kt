@@ -1,17 +1,23 @@
 package com.pntstudio.buzz.tedaudio
 
+import android.app.AlarmManager
+import android.app.AlertDialog
+import android.app.PendingIntent
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.*
 import android.widget.SeekBar
 import com.example.android.uamp.viewmodels.MediaItemFragmentViewModel
-import com.google.android.exoplayer2.offline.DownloadService
 import com.pntstudio.buzz.tedaudio.fragment.DetailMediaListFragment
 import com.pntstudio.buzz.tedaudio.fragment.EnglishSubFragment
 import com.pntstudio.buzz.tedaudio.fragment.InfoMediaFragment
@@ -23,18 +29,8 @@ import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
-import kotlinx.android.synthetic.main.tem_media_controller.*
-import android.app.AlarmManager
-import android.os.Build
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Context.ALARM_SERVICE
+import kotlinx.android.synthetic.main.layout_media_controller.*
 import java.util.*
-import android.content.DialogInterface
-import android.R.array
-import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.support.v4.content.ContextCompat
 
 
 class DetailActivity : AppCompatActivity() {
@@ -51,15 +47,16 @@ class DetailActivity : AppCompatActivity() {
     lateinit var bus: Bus
     lateinit var model: MediaItemFragmentViewModel
     lateinit var alarm: AlarmManager
-    lateinit var pendingIntent:PendingIntent
-     var timeInterval = 0L
+    lateinit var pendingIntent: PendingIntent
+    var timeInterval = 0L
+    var selectedIndexTime = 0;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-         alarm = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-         pendingIntent = PendingIntent.getBroadcast(applicationContext, 0,
+        alarm = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        pendingIntent = PendingIntent.getBroadcast(applicationContext, 0,
                 Intent().setAction("STOP_TEST_SERVICE"), PendingIntent.FLAG_UPDATE_CURRENT)
 
         var listMedia = ArrayList<MediaItemData>()
@@ -68,8 +65,6 @@ class DetailActivity : AppCompatActivity() {
         val position = intent.getIntExtra(PLAYPOS, 0);
         setSupportActionBar(tool_bar)
 
-
-//        setSupportActionBar(toolbar)
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
@@ -90,30 +85,46 @@ class DetailActivity : AppCompatActivity() {
         previous_btn.setOnClickListener { sendIntent(PREVIOUS) }
         play_pause_btn.setOnClickListener { sendIntent(PLAYPAUSE) }
         next_btn.setOnClickListener {
-            sendIntent(NEXT) }
+            sendIntent(NEXT)
+        }
         repeat_btn.setOnClickListener { toggleSongRepetition() }
         song_progress_current.setOnClickListener { sendIntent(SKIP_BACKWARD) }
         song_progress_max.setOnClickListener { sendIntent(SKIP_FORWARD) }
         initSericePlayer(position)
-        tabDots.setupWithViewPager(container,true)
+        tabDots.setupWithViewPager(container, true)
         container.offscreenPageLimit = 3
-
+        showStatusPlayer();
 
     }
 
     private fun toggleShuffle() {
         val isShuffleEnabled = !config.isShuffleEnabled
         config.isShuffleEnabled = isShuffleEnabled
-        shuffle_btn.applyColorFilter(if (isShuffleEnabled) R.color.pressed_item_foreground else R.color.white)
-        shuffle_btn.alpha = if (isShuffleEnabled) 1f else LOWER_ALPHA
+        if (isShuffleEnabled)
+            shuffle_btn.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_shuffle_blue))
+        else
+            shuffle_btn.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_shuffle))
+
 
     }
 
     private fun toggleSongRepetition() {
         val repeatSong = !config.repeatSong
         config.repeatSong = repeatSong
-        repeat_btn.applyColorFilter(if (repeatSong) R.color.pressed_item_foreground else R.color.white)
-        repeat_btn.alpha = if (repeatSong) 1f else LOWER_ALPHA
+        if(repeatSong) repeat_btn.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_repeat_blue))
+        else  repeat_btn.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_repeat))
+
+    }
+    private fun showStatusPlayer(){
+        val isShuffleEnabled = config.isShuffleEnabled
+        if (isShuffleEnabled)
+            shuffle_btn.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_shuffle_blue))
+        else
+            shuffle_btn.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_shuffle))
+
+        val repeatSong = config.repeatSong
+        if(repeatSong) repeat_btn.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_repeat_blue))
+        else  repeat_btn.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_repeat))
 
     }
 
@@ -139,13 +150,13 @@ class DetailActivity : AppCompatActivity() {
         })
     }
 
-    private fun initSericePlayer(position:Int) {
+    private fun initSericePlayer(position: Int) {
 
         Intent(this, MusicService::class.java).apply {
             putExtra(SONG_POS, model.getSelecrNUmber().value)
-            putExtra("list",model.getMediaList().value)
-            putExtra("detail",model.getSelectedMedia().value)
-            putExtra(PLAYPOS,position)
+            putExtra("list", model.getMediaList().value)
+            putExtra("detail", model.getSelectedMedia().value)
+            putExtra(PLAYPOS, position)
             action = INIT
             startService(this)
         }
@@ -155,11 +166,10 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_detail, menu)
-        if(config.alarm_turn_off)
-            menu.getItem(0).icon = ContextCompat.getDrawable(this,R.drawable.ic_alarm_clock_selected)
+        if (config.alarm_turn_off)
+            menu.getItem(0).icon = ContextCompat.getDrawable(this, R.drawable.ic_alarm_clock_selected)
         return true
     }
-
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -169,26 +179,25 @@ class DetailActivity : AppCompatActivity() {
 
         val id = item.itemId
         if (id == R.id.action_alarm) {
-            if(!config.alarm_turn_off) {
+            if (!config.alarm_turn_off) {
                 // not set alarm yet
                 val singleChoiceItems = resources.getStringArray(R.array.dialog_alarm_str)
                 val itemSelected = 0
                 AlertDialog.Builder(this)
                         .setTitle("Select time to turn off ")
                         .setSingleChoiceItems(singleChoiceItems, itemSelected, DialogInterface.OnClickListener
-                        { dialogInterface, selectedIndex -> setStopServiceAlarm(selectedIndex,item) })
-                        .setPositiveButton("Ok", null)
+                        { dialogInterface, selectedIndex -> setIndexAlarmTime(selectedIndex) })
+                        .setPositiveButton("Ok" ){dialog, which -> setStopServiceAlarm(item) }
                         .setNegativeButton("Cancel", null)
                         .show()
-            }else{
+            } else {
                 // already set alarm
                 AlertDialog.Builder(this)
                         .setTitle("Cancel alarm turn off")
-                        .setMessage("Audio will turn off in "+ convertLongToTime(timeInterval))
+                        .setMessage("Audio will turn off in " + convertLongToTime(timeInterval))
                         .setPositiveButton("Yes") { dialog, which -> cancelAlarm(item) }
                         .setNegativeButton("No") { dialog, which -> Log.d("MainActivity", "Aborting mission...") }
                         .show()
-
 
 
             }
@@ -199,16 +208,20 @@ class DetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun  cancelAlarm(item: MenuItem){
+    fun cancelAlarm(item: MenuItem) {
         config.alarm_turn_off = false
-        item.icon = ContextCompat.getDrawable(this,R.drawable.ic_alarm_clock)
+        item.icon = ContextCompat.getDrawable(this, R.drawable.ic_alarm_clock)
         alarm.cancel(pendingIntent)
     }
 
-    fun setStopServiceAlarm(index:Int,item: MenuItem) {
-        item.icon = ContextCompat.getDrawable(this,R.drawable.ic_alarm_clock_selected)
+    fun setIndexAlarmTime(index: Int){
+        selectedIndexTime = index;
+    }
+
+    fun setStopServiceAlarm( item: MenuItem) {
+        item.icon = ContextCompat.getDrawable(this, R.drawable.ic_alarm_clock_selected)
         config.alarm_turn_off = true
-        timeInterval = TIME_MAP.get(index)!! * 60 * 1000L + System.currentTimeMillis()
+        timeInterval = TIME_MAP.get(selectedIndexTime)!! * 60 * 1000L + System.currentTimeMillis()
         val calendar = Calendar.getInstance()
         calendar.setTimeInMillis(timeInterval)
 
@@ -235,21 +248,18 @@ class DetailActivity : AppCompatActivity() {
     }
 
     @Subscribe
-    fun songChangeDuration(event: Events.DurationUpdate){
+    fun songChangeDuration(event: Events.DurationUpdate) {
         val duration = event.duration
-        song_progressbar.max = duration/1000
+        song_progressbar.max = duration / 1000
 
     }
 
     @Subscribe
     fun songStateChanged(event: Events.SongStateChanged) {
         val isPlaying = event.isPlaying
-        play_pause_btn.setImageDrawable(resources.getDrawable(if (isPlaying) R.drawable.exo_controls_pause else R.drawable.exo_icon_play))
+        play_pause_btn.setImageDrawable(resources.getDrawable(if (isPlaying) R.drawable.ic_pause_button else R.drawable.ic_play_button))
     }
 
-    @Subscribe
-    fun playlistUpdated(event: Events.PlaylistUpdated) {
-    }
 
     @Subscribe
     fun progressUpdated(event: Events.ProgressUpdated) {
@@ -274,8 +284,8 @@ class DetailActivity : AppCompatActivity() {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             if (position == 0) return DetailMediaListFragment.newInstance()
-            else if(position==1) return InfoMediaFragment.newInstance()
-            else  return EnglishSubFragment.newInstance()
+            else if (position == 1) return InfoMediaFragment.newInstance()
+            else return EnglishSubFragment.newInstance()
         }
 
         override fun getCount(): Int {

@@ -3,16 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_holder"
-    android:paddingTop="5dp"
     android:paddingLeft="@dimen/padding_small"
     android:paddingRight="@dimen/padding_small"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/medium_margin">
+    android:paddingBottom="@dimen/padding_small">
 
 
 
     <LinearLayout
+        android:paddingTop="@dimen/medium_margin"
+
         android:id="@+id/song_info_controls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +47,7 @@
             android:layout_weight="1"
             android:paddingBottom="@dimen/small_margin"
             android:paddingTop="@dimen/small_margin"
-            android:src="@drawable/exo_icon_play"/>
+            android:src="@drawable/ic_play_button"/>
 
         <ImageView
             android:id="@+id/next_btn"

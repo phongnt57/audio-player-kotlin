@@ -116,7 +116,11 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
                         initService()
                         mSongs = intent.getSerializableExtra("list") as ArrayList<MediaItemData>
                         mCurrSong = intent.getSerializableExtra("detail") as MediaItemData
-                        postion = intent.getIntExtra(PLAYPOS, 0);
+                        postion = mSongs.indexOf(mCurrSong!!)
+
+                    }else{
+                        mCurrSong = intent.getSerializableExtra("detail") as MediaItemData
+                        postion = mSongs.indexOf(mCurrSong!!)
 
                     }
                     initSongs(postion)
@@ -285,7 +289,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
     private fun setupNotification() {
         val title = mCurrSong?.title ?: ""
 //        val artist = mCurrSong?.description ?: ""
-        val playPauseIcon = if (getIsPlaying()) R.drawable.exo_icon_pause else R.drawable.exo_icon_play
+        val playPauseIcon = if (getIsPlaying()) R.drawable.ic_pause_button else R.drawable.ic_play_button
 
         var notifWhen = 0L
         var showWhen = false
