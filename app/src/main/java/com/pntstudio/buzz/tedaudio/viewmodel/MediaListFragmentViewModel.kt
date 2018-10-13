@@ -6,8 +6,12 @@ package com.pntstudio.buzz.tedaudio.viewmodel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.content.Context
+import android.os.Environment
 import android.util.Log
+import android.widget.Toast
 import com.google.gson.GsonBuilder
+import com.pntstudio.buzz.tedaudio.helps.FOLDER_DOWNLOAD
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
 import com.pntstudio.buzz.tedaudio.retrofit.Api
 import com.pntstudio.buzz.tedaudio.rssparse.RssReader
@@ -17,6 +21,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.io.File
 
 
 class MediaListFragmentViewModel : ViewModel() {
@@ -24,6 +29,8 @@ class MediaListFragmentViewModel : ViewModel() {
     //this is the data that we will fetch asynchronously
     private var heroList: MutableLiveData<ArrayList<MediaItemData>> = MutableLiveData()
     private var textSearch: MutableLiveData<String> = MutableLiveData()
+
+    private var downloadList: MutableLiveData<ArrayList<MediaItemData>> = MutableLiveData()
 
 
     fun getTextSearch(): MutableLiveData<String> {
@@ -46,9 +53,40 @@ class MediaListFragmentViewModel : ViewModel() {
             return heroList
         }
 
+    val downloads: MutableLiveData<ArrayList<MediaItemData>>
+        get() {
+            downloadList = MutableLiveData<ArrayList<MediaItemData>>()
+            loadDownloadFile()
+            return downloadList
+        }
+
+    private fun loadDownloadFile() {
+        val arrayList =arrayListOf<MediaItemData>()
+
+        val directory = File(Environment.getExternalStorageDirectory(), FOLDER_DOWNLOAD)
+        val files = directory.listFiles()
+        if (files == null) {
+//            return arrayList
+            downloadList.setValue(arrayList)
+        }
+        for (i in files.indices) {
+            //add file
+            val item = files[i]
+            arrayList.add(MediaItemData( item.name,"","",item.absolutePath,"",""))
+
+        }
+        downloadList.value = arrayList
+
+
+    }
+
 
     fun getMediaList(): LiveData<ArrayList<MediaItemData>> {
         return heroList
+    }
+
+    fun getDownloadList(): LiveData<ArrayList<MediaItemData>> {
+        return downloadList
     }
 
 

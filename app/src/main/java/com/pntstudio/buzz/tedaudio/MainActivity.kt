@@ -1,8 +1,8 @@
 package com.pntstudio.buzz.tedaudio
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.net.Uri
-import android.opengl.Visibility
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
@@ -11,21 +11,21 @@ import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import com.pntstudio.buzz.tedaudio.fragment.DownloadListFragment
 import com.pntstudio.buzz.tedaudio.fragment.MediaListFragment
 import com.pntstudio.buzz.tedaudio.helps.BusProvider
 import com.pntstudio.buzz.tedaudio.model.Events
+import com.pntstudio.buzz.tedaudio.model.MediaItemData
 import com.pntstudio.buzz.tedaudio.viewmodel.MediaListFragmentViewModel
 import com.squareup.otto.Bus
 import com.squareup.otto.Subscribe
-import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-
 class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractionListener {
-    private  lateinit var viewmodel: MediaListFragmentViewModel
+    private lateinit var viewmodel: MediaListFragmentViewModel
     lateinit var bus: Bus
-
+    lateinit var currentPlaying: MediaItemData
 
 
     override fun onFragmentInteraction(uri: Uri) {
@@ -41,6 +41,8 @@ class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractio
             }
             R.id.navigation_dashboard -> {
 //                message.setText(R.string.title_dashboard)
+                val fragment = DownloadListFragment.Companion.newInstance()
+                addFragment(fragment)
                 return@OnNavigationItemSelectedListener true
             }
 //            R.id.navigation_notifications -> {
@@ -63,8 +65,18 @@ class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractio
         playing_layout.visibility = View.GONE
         bus = BusProvider.instance
         bus.register(this)
+        bus.post(Events.EmptyObject())
+        playing_layout.setOnClickListener { showDetailActivity() }
 
 
+    }
+
+    private fun showDetailActivity() {
+        val intent = Intent(this, DetailActivity::class.java)
+        intent.putExtra("list", viewmodel.getMediaList().value)
+        intent.putExtra("detail",currentPlaying)
+        intent.putExtra("isExistMedia", true)
+        startActivity(intent)
 
     }
 
@@ -95,20 +107,21 @@ class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractio
         return true;
 
     }
+
     override fun onDestroy() {
         super.onDestroy()
         bus.unregister(this)
 
     }
+
     @Subscribe
     fun songChangedEvent(event: Events.SongChanged) {
         Log.e("change", "----");
-        val song = event.song
-        if (song != null) {
-            playing_layout.visibility = View.VISIBLE
-            playing_song_tv.setText(song.title)
-            playing_song_tv.setSelected(true)
-        }
+        currentPlaying = event.song!!
+        playing_layout.visibility = View.VISIBLE
+        playing_song_tv.setText(currentPlaying.title)
+        playing_song_tv.setSelected(true)
+
 
     }
 

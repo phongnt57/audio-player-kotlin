@@ -65,8 +65,8 @@ class EnglishSubFragment : Fragment() {
                             Log.e("title",title())
                             var trancript = ""
                             select("div.Grid__cell > p").forEachIndexed { index, element ->
-                                Log.e("elemt",element.text())
-                                Log.e("index","".plus(index))
+//                                Log.e("elemt",element.text())
+//                                Log.e("index","".plus(index))
                                 trancript =  trancript + element.text()+"\n"+"\n"
 
 

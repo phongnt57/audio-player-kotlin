@@ -24,6 +24,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN
 import android.util.Log
+import android.view.View
 import com.pntstudio.buzz.tedaudio.DetailActivity
 import com.pntstudio.buzz.tedaudio.R
 import com.pntstudio.buzz.tedaudio.helps.*
@@ -33,6 +34,8 @@ import com.pntstudio.buzz.tedaudio.receiver.ControlActionsListener
 import com.pntstudio.buzz.tedaudio.receiver.HeadsetPlugReceiver
 import com.pntstudio.buzz.tedaudio.receiver.RemoteControlReceiver
 import com.squareup.otto.Bus
+import com.squareup.otto.Subscribe
+import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.http.POST
 import java.util.*
 
@@ -356,6 +359,11 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
 
     private fun getContentIntent(): PendingIntent {
         val contentIntent = Intent(this, DetailActivity::class.java)
+        contentIntent.putExtra("list", mSongs)
+        contentIntent.putExtra("detail", mCurrSong)
+        contentIntent.putExtra("isExistMedia",true)
+        contentIntent.action = UUID.randomUUID().toString()
+        contentIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) // Intent.FLAG_ACTIVITY_SINGLE_TOP or
         return PendingIntent.getActivity(this, 0, contentIntent, 0)
     }
 
@@ -674,5 +682,19 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         val newProgress = if (forward) curr + twoPercents else curr - twoPercents
         mPlayer!!.seekTo(newProgress)
         resumeSong()
+    }
+
+    @Subscribe
+    fun onReCreateView(event: Events.EmptyObject) {
+        mBus!!.post(Events.SongChanged(mCurrSong))
+        val isPlaying = getIsPlaying()
+        mBus!!.post(Events.SongStateChanged(isPlaying))
+        mBus!!.post(Events.DurationUpdate(mPlayer!!.duration))
+
+
+
+
+
+
     }
 }

@@ -55,7 +55,7 @@ class InfoMediaFragment : Fragment() {
                 Glide.with(activity!!)
                         .load(t!!.imageUrl)
                         .into(cover_img)
-                title_tv.setText(t.description)
+                title_tv.setText(t.title)
 
             }
 

@@ -34,6 +34,16 @@ class Config(val context: Context)  {
         get() = prefs.getBoolean(ALARM_TURN_OFF, false)
         set(alarm_turn_off) = prefs.edit().putBoolean(ALARM_TURN_OFF, alarm_turn_off).apply()
 
+    fun getOriginLink(key:String):String {
+        return prefs.getString(key,"")
+    }
+
+    fun setOriginLink(key:String,value:String){
+        return prefs.edit().putString(key,value).apply()
+    }
+
+
+
 
 
 

@@ -70,7 +70,7 @@ class RssParseHandler : DefaultHandler() {
         } else if (parsingDescription && parsingItem) {
                 // currentItem.setLink(new String(ch, start, length));
                 currentMediaItem.description = String(ch, start, length)
-                Log.e("description", String(ch, start, length))
+//                Log.e("description", String(ch, start, length))
 
         } else if (parsingdateTime && parsingItem) {
                 currentMediaItem.dateTime = String(ch,start,length)

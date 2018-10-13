@@ -16,5 +16,6 @@ class Events {
 
     class DurationUpdate internal constructor(val duration: Int)
 
-    class NoStoragePermission internal constructor()
+    // trigger service to resend info song
+    class EmptyObject internal constructor()
 }

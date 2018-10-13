@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:background="@drawable/blur_bg"
-    tools:context="com.pntstudio.buzz.tedaudio.DetailActivity">
+    >
     <android.support.v7.widget.Toolbar
         android:id="@+id/tool_bar"
         app:titleTextColor="@android:color/white"

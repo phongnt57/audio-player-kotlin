@@ -9,6 +9,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -50,6 +51,7 @@ class DetailActivity : AppCompatActivity() {
     lateinit var pendingIntent: PendingIntent
     var timeInterval = 0L
     var selectedIndexTime = 0;
+    var isExistMedia = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +64,8 @@ class DetailActivity : AppCompatActivity() {
         var listMedia = ArrayList<MediaItemData>()
         listMedia = intent.getSerializableExtra("list") as ArrayList<MediaItemData>
         val detail = intent.getSerializableExtra("detail") as MediaItemData
-        val position = intent.getIntExtra(PLAYPOS, 0);
+        val position = listMedia.indexOf(detail)
+        isExistMedia  = intent.getBooleanExtra("isExistMedia",false)
         setSupportActionBar(tool_bar)
 
         // Create the adapter that will return a fragment for each of the three
@@ -90,7 +93,17 @@ class DetailActivity : AppCompatActivity() {
         repeat_btn.setOnClickListener { toggleSongRepetition() }
         song_progress_current.setOnClickListener { sendIntent(SKIP_BACKWARD) }
         song_progress_max.setOnClickListener { sendIntent(SKIP_FORWARD) }
-        initSericePlayer(position)
+        if(!isExistMedia) {
+            initSericePlayer()
+        }else{
+            val handler = Handler()
+            handler.postDelayed(Runnable {
+                //Do something after 500ms
+                bus.post(Events.EmptyObject())
+
+            }, 500)
+
+        }
         tabDots.setupWithViewPager(container, true)
         container.offscreenPageLimit = 3
         showStatusPlayer();
@@ -126,6 +139,7 @@ class DetailActivity : AppCompatActivity() {
         if(repeatSong) repeat_btn.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_repeat_blue))
         else  repeat_btn.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_repeat))
 
+
     }
 
     private fun initSeekbarChangeListener() {
@@ -150,13 +164,13 @@ class DetailActivity : AppCompatActivity() {
         })
     }
 
-    private fun initSericePlayer(position: Int) {
+    private fun initSericePlayer() {
 
         Intent(this, MusicService::class.java).apply {
             putExtra(SONG_POS, model.getSelecrNUmber().value)
             putExtra("list", model.getMediaList().value)
             putExtra("detail", model.getSelectedMedia().value)
-            putExtra(PLAYPOS, position)
+//            putExtra(PLAYPOS, position)
             action = INIT
             startService(this)
         }
@@ -243,6 +257,14 @@ class DetailActivity : AppCompatActivity() {
         if (song != null) {
             model.setSelectedMedia(song)
             tool_bar.setTitle(song.title)
+            tool_bar.title  = song.title
+
+
+
+
+//            this@DetailActivity.runOnUiThread(java.lang.Runnable {
+//
+//            })
         }
 
     }
