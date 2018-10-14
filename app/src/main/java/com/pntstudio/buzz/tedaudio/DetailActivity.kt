@@ -18,6 +18,8 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.*
 import android.widget.SeekBar
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import com.example.android.uamp.viewmodels.MediaItemFragmentViewModel
 import com.pntstudio.buzz.tedaudio.fragment.DetailMediaListFragment
 import com.pntstudio.buzz.tedaudio.fragment.EnglishSubFragment
@@ -287,6 +289,13 @@ class DetailActivity : AppCompatActivity() {
     fun progressUpdated(event: Events.ProgressUpdated) {
         val progress = event.progress
         song_progressbar.progress = progress
+    }
+
+    @Subscribe
+    fun onDownloadSucceess(event: Events.DownloadSucess) {
+        val download = event.download
+        Toast.makeText(this,"Download sucess", LENGTH_LONG).show()
+        config.setOriginLink(download.title,download.linkSub)
     }
 
     override fun onDestroy() {

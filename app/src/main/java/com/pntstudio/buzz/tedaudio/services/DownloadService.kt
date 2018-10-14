@@ -17,11 +17,14 @@ import retrofit2.Retrofit
 import android.app.NotificationManager
 import android.os.Environment
 import android.util.Log
+import com.pntstudio.buzz.tedaudio.helps.BusProvider
 import okhttp3.ResponseBody
 import com.pntstudio.buzz.tedaudio.helps.ProgressResponseBody
 import javax.xml.datatype.DatatypeConstants.SECONDS
 import okhttp3.OkHttpClient
 import com.pntstudio.buzz.tedaudio.helps.OnAttachmentDownloadListener
+import com.pntstudio.buzz.tedaudio.model.Events
+import com.squareup.otto.Bus
 import okhttp3.Interceptor
 import okhttp3.Response
 import retrofit2.Call
@@ -57,6 +60,8 @@ class DownloadService : IntentService("Dowload Service"),OnAttachmentDownloadLis
     private val outputFolder = "TED audio"
     private val outputRoot = File(Environment.getExternalStorageDirectory(), outputFolder)
     private val TAG = "Download service"
+    private var mBus: Bus? = null
+
 
 
 
@@ -65,6 +70,9 @@ class DownloadService : IntentService("Dowload Service"),OnAttachmentDownloadLis
         super.onCreate()
         if (!outputRoot.exists() && !outputRoot.mkdirs()) {
             return
+        }
+        if (mBus == null) {
+            mBus = BusProvider.instance
         }
 
 
@@ -104,8 +112,10 @@ class DownloadService : IntentService("Dowload Service"),OnAttachmentDownloadLis
     private fun onDownloadComplete() {
         Log.e(TAG,"download complete")
         download.progess = 100
+        mBus!!.post(Events.DownloadSucess(download))
+
 //        sendIntent(download)
-        notificationManager!!.cancel(101)
+//        notificationManager!!.cancel(101)
         notificationBuilder!!.setContentTitle("Download success")
         notificationBuilder!!.setProgress(0, 0, false)
         notificationManager!!.notify(101, notificationBuilder!!.build())

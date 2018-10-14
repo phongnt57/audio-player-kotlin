@@ -14,10 +14,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.pntstudio.buzz.tedaudio.R
 import android.graphics.Movie
-
-
-
-
+import com.bumptech.glide.request.RequestOptions
 
 
 public class MediaItemAdapter(internal var mCtx: Context,
@@ -66,6 +63,7 @@ public class MediaItemAdapter(internal var mCtx: Context,
 
         Glide.with(mCtx)
                 .load(hero.imageUrl)
+                .apply(RequestOptions().placeholder(R.drawable.ic_album_black_24dp).error(R.drawable.ic_album_black_24dp))
                 .into(holder.imageView)
 
         holder.title.setText(hero.title)

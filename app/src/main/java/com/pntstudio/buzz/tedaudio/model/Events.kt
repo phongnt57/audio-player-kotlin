@@ -18,4 +18,6 @@ class Events {
 
     // trigger service to resend info song
     class EmptyObject internal constructor()
+
+    class DownloadSucess internal constructor(val download: Download)
 }

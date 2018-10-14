@@ -30,7 +30,7 @@ import kotlinx.android.synthetic.main.fragment_meia_list.*
 class DownloadListFragment : Fragment(), MediaItemAdapter.OnClickItem {
     override fun onClick(item: MediaItemData, position: Int) {
         val intent = Intent(activity, DetailActivity::class.java)
-        intent.putExtra("list", viewmodel.getMediaList().value)
+        intent.putExtra("list", viewmodel.getDownloadList().value)
         intent.putExtra("detail", item)
         intent.putExtra(PLAYPOS, position)
         startActivity(intent)

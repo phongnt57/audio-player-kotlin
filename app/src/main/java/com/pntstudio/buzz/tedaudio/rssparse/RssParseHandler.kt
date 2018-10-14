@@ -21,7 +21,7 @@ class RssParseHandler : DefaultHandler() {
     var parsingdateTime = false
     override fun startElement(uri: String?, localName: String?, qName: String?, attributes: Attributes?) {
         if ("item" == qName) {
-            currentMediaItem = MediaItemData("","","","","","")
+            currentMediaItem = MediaItemData("","","","","","",false)
             parsingItem = true
         } else if ("title" == qName) {
             parsingTitle = true

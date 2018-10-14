@@ -42,6 +42,7 @@ const val SHOW_ALBUM_COVER = "show_album_cover"
 const val ALARM_TURN_OFF = "alarm turn off";
 
 const val FOLDER_DOWNLOAD = "TED audio"
+const val PERMISSION_WRITE_STORAGE = 11
 const val LIST_HEADERS_COUNT = 2
 const val LOWER_ALPHA = 0.5f
 

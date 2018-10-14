@@ -17,7 +17,7 @@ import com.pntstudio.buzz.tedaudio.model.MediaItemData
 import kotlinx.android.synthetic.main.fragment_english_sub.*
 import org.jsoup.Jsoup
 import android.text.method.ScrollingMovementMethod
-
+import com.pntstudio.buzz.tedaudio.helps.config
 
 
 /**
@@ -56,8 +56,9 @@ class EnglishSubFragment : Fragment() {
 
         viewmodel.getSelectedMedia().observe(this,object : Observer<MediaItemData>{
             override fun onChanged(t: MediaItemData?) {
-                val link = t!!.originLink
-                val trancscriptLink = link!!.replace("?rss", "/transcript?transcript")
+                var link = t!!.originLink
+                if(!link!!.contains("http")) link = activity!!.config.getOriginLink(t.title!!)
+                val trancscriptLink = link.replace("?rss", "/transcript?transcript")
                 transcript_tv.text = ""
                 val threadJSoup = Thread(Runnable {
                     try {

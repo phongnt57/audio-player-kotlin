@@ -13,6 +13,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    <Button
+        android:visibility="gone"
+        android:id="@+id/retry_btn"
+        android:textColor="@color/white"
+        android:background="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_small"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:layout_centerInParent="true"
+        android:text="Retry"
+        />
+    <ProgressBar
+        android:id="@+id/loading_progessbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/up_button"
         android:layout_width="wrap_content"

@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.pntstudio.buzz.tedaudio.R
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
 
@@ -32,6 +33,8 @@ public class MediaItemDetailAdapter(internal var mCtx: Context, internal var her
 
         Glide.with(mCtx)
                 .load(hero.imageUrl)
+                .apply(RequestOptions().placeholder(R.drawable.ic_album_black_24dp).error(R.drawable.ic_album_black_24dp))
+
                 .into(holder.imageView)
 
         holder.title.setText(hero.title)

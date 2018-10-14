@@ -10,6 +10,7 @@ data  class Download(
         var link: String,
         var status: String,
         var progess: Int,
-        var fileSize: Int
+        var fileSize: Int,
+        var linkSub: String
 
 ):Serializable

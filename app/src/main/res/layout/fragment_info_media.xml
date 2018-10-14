@@ -31,6 +31,7 @@
         android:weightSum="3"
         android:layout_alignParentBottom="true">
         <ImageView
+            android:id="@+id/share_img"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,6 +39,7 @@
             android:layout_margin="@dimen/fab_margin"/>
 
         <ImageView
+            android:id="@+id/video_img"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -11,7 +11,8 @@ data class MediaItemData
  var imageUrl: String? = null,
  var mp3Url: String? = null,
  var dateTime: String? = null,
- var originLink:String? =null):Serializable
+ var originLink:String? =null,
+ var isOffline:Boolean):Serializable
 
 
 

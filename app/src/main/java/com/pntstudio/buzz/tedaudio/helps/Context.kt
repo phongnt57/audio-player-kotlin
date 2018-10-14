@@ -1,8 +1,11 @@
 package com.pntstudio.buzz.tedaudio.helps
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.support.v4.content.ContextCompat
 import com.pntstudio.buzz.tedaudio.services.MusicService
 import java.text.SimpleDateFormat
 import java.util.*
@@ -17,6 +20,15 @@ fun Context.sendIntent(action: String) {
         }
     }
 }
+
+fun Context.hasPermission(permId: Int) = ContextCompat.checkSelfPermission(this, getPermissionString(permId)) == PackageManager.PERMISSION_GRANTED
+
+fun Context.getPermissionString(id: Int) = when (id) {
+    PERMISSION_WRITE_STORAGE -> Manifest.permission.WRITE_EXTERNAL_STORAGE
+
+    else -> ""
+}
+
 
 fun Context.getSharedPrefs(): SharedPreferences? {
     return getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
@@ -37,5 +49,6 @@ fun convertDateToLong(date: String): Long {
     val df = SimpleDateFormat("yyyy.MM.dd HH:mm")
     return df.parse(date).time
 }
+
 
 

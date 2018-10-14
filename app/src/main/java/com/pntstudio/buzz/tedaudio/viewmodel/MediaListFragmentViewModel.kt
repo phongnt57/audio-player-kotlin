@@ -31,6 +31,7 @@ class MediaListFragmentViewModel : ViewModel() {
     private var textSearch: MutableLiveData<String> = MutableLiveData()
 
     private var downloadList: MutableLiveData<ArrayList<MediaItemData>> = MutableLiveData()
+    private var errorMsg : MutableLiveData<String> = MutableLiveData()
 
 
     fun getTextSearch(): MutableLiveData<String> {
@@ -68,11 +69,12 @@ class MediaListFragmentViewModel : ViewModel() {
         if (files == null) {
 //            return arrayList
             downloadList.setValue(arrayList)
+            return
         }
         for (i in files.indices) {
             //add file
             val item = files[i]
-            arrayList.add(MediaItemData( item.name,"","",item.absolutePath,"",""))
+            arrayList.add(MediaItemData( item.name,"","",item.absolutePath,"","",true))
 
         }
         downloadList.value = arrayList
@@ -87,6 +89,10 @@ class MediaListFragmentViewModel : ViewModel() {
 
     fun getDownloadList(): LiveData<ArrayList<MediaItemData>> {
         return downloadList
+    }
+
+    fun getErrorMsg():LiveData<String>{
+        return  errorMsg
     }
 
 
@@ -116,8 +122,9 @@ class MediaListFragmentViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<String>, t: Throwable) {
-
                 Log.e("response body error", t.message);
+                errorMsg.value = t.message
+
 
             }
         })

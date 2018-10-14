@@ -43,9 +43,7 @@ class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
         startActivity(intent)
     }
 
-    // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
+
 
     private lateinit var mediaAdapter: MediaItemAdapter
     private  lateinit var viewmodel: MediaListFragmentViewModel
@@ -54,19 +52,13 @@ class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            mParam1 = arguments!!.getString(ARG_PARAM1)
-            mParam2 = arguments!!.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_meia_list, container, false)
-
-
-
         return view
     }
 
@@ -79,29 +71,43 @@ class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
         up_button.hide()
         up_button.setOnClickListener { linearLayoutMamanger.smoothScrollToPosition(mediaRv, null, 0);
         }
+        retry_btn.setOnClickListener { retry() }
         mediaRv.setHasFixedSize(true);
         mediaRv.setLayoutManager(linearLayoutMamanger);
         mediaRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                if (dy > 0 || dy < 0 && up_button.isShown())
+                if (dy > 0 || dy < 0 && up_button.isShown()) {
+                    if(up_button!= null)
                     up_button.hide()
+                }
             }
 
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE &&linearLayoutMamanger.findFirstCompletelyVisibleItemPosition() > 3) {
+                    if(up_button!=null)
                     up_button.show()
                 }
                 super.onScrollStateChanged(recyclerView, newState)
             }
         })
         viewmodel = ViewModelProviders.of(activity!!).get(MediaListFragmentViewModel::class.java)
+
         viewmodel.heroes.observe(activity!!, object : Observer<ArrayList<MediaItemData>> {
             override fun onChanged(t: ArrayList<MediaItemData>?) {
+                loading_progessbar.visibility = View.GONE
+                retry_btn.visibility = View.GONE
                 mediaAdapter = MediaItemAdapter(context!!, t!!,t,this@MediaListFragment,-1)
                 mediaRv.adapter = mediaAdapter
             }
 
+
+        })
+        viewmodel.getErrorMsg().observe(activity!!,object :Observer<String>{
+            override fun onChanged(t: String?) {
+                retry_btn.visibility = View.VISIBLE
+                loading_progessbar.visibility = View.GONE
+            }
 
         })
         viewmodel.getTextSearch().observe(activity!!,object : Observer<String> {
@@ -111,24 +117,25 @@ class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
         })
     }
 
+    private fun retry() {
+        loading_progessbar.visibility = View.VISIBLE
+        viewmodel.heroes.observe(activity!!, object : Observer<ArrayList<MediaItemData>> {
+            override fun onChanged(t: ArrayList<MediaItemData>?) {
+                loading_progessbar.visibility = View.GONE
+                retry_btn.visibility = View.GONE
+                mediaAdapter = MediaItemAdapter(context!!, t!!,t,this@MediaListFragment,-1)
+                mediaRv.adapter = mediaAdapter
+            }
 
 
+        })
 
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
-        }
     }
+
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is OnFragmentInteractionListener) {
-            mListener = context
-        } else {
-            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
-        }
+
     }
 
     override fun onDetach() {
@@ -137,8 +144,7 @@ class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-//        super.onCreateOptionsMenu(menu, inflater)
-//        activity!!.getMenuInflater().inflate(R.menu.menu_dashboard, menu);
+
 
 
     }
