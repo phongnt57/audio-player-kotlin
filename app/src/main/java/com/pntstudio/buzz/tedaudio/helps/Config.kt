@@ -1,5 +1,7 @@
 package com.pntstudio.buzz.tedaudio.helps
 
+import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
 
 class Config(val context: Context)  {
@@ -41,6 +43,17 @@ class Config(val context: Context)  {
     fun setOriginLink(key:String,value:String){
         return prefs.edit().putString(key,value).apply()
     }
+    fun isMyServiceRunning(serviceClass: Class<*>,activity:Activity): Boolean {
+        val manager = activity.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
+
 
 
 

@@ -547,8 +547,6 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
         mediaSession?.setMetadata(metadata)
     }
 
-
-
     private fun destroyPlayer() {
         mPlayer?.stop()
         mPlayer?.release()

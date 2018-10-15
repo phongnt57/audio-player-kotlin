@@ -17,10 +17,12 @@ import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.pntstudio.buzz.tedaudio.fragment.DownloadListFragment
 import com.pntstudio.buzz.tedaudio.fragment.MediaListFragment
 import com.pntstudio.buzz.tedaudio.helps.BusProvider
 import com.pntstudio.buzz.tedaudio.helps.PERMISSION_WRITE_STORAGE
+import com.pntstudio.buzz.tedaudio.helps.config
 import com.pntstudio.buzz.tedaudio.helps.hasPermission
 import com.pntstudio.buzz.tedaudio.model.Events
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
@@ -154,12 +156,20 @@ class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractio
     fun songChangedEvent(event: Events.SongChanged) {
         Log.e("change", "----");
         currentPlaying = event.song!!
+        viewmodel.setCurrentPlaying(currentPlaying)
         playing_layout.visibility = View.VISIBLE
         playing_song_tv.setText(currentPlaying.title)
         playing_song_tv.setSelected(true)
 
 
     }
+
+    @Subscribe
+    fun onDownloadSuccess(event: Events.DownloadSucess) {
+        viewmodel.loadDownloadFile()
+
+    }
+
 
     /**
      * add/replace fragment in container [framelayout]

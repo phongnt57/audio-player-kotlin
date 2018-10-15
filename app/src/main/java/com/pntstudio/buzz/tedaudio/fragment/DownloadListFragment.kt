@@ -13,22 +13,32 @@ import android.view.*
 import com.pntstudio.buzz.tedaudio.DetailActivity
 import com.pntstudio.buzz.tedaudio.R
 import com.pntstudio.buzz.tedaudio.helps.PLAYPOS
+import com.pntstudio.buzz.tedaudio.helps.config
 import com.pntstudio.buzz.tedaudio.model.MediaItemAdapter
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
+import com.pntstudio.buzz.tedaudio.services.MusicService
 import com.pntstudio.buzz.tedaudio.viewmodel.MediaListFragmentViewModel
 import kotlinx.android.synthetic.main.fragment_meia_list.*
 
 
 /**
  * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [MediaListFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
  * Use the [MediaListFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class DownloadListFragment : Fragment(), MediaItemAdapter.OnClickItem {
     override fun onClick(item: MediaItemData, position: Int) {
+        if(context!!.config.isMyServiceRunning(MusicService::class.java,activity!!)){
+            if(viewmodel.getCurrentPlaying().value!=null){
+                if(!viewmodel.getCurrentPlaying().value!!.isOffline){
+                    val myService = Intent(activity, MusicService::class.java)
+                    activity!!.stopService(myService)
+
+                }
+            }
+
+        }
+
         val intent = Intent(activity, DetailActivity::class.java)
         intent.putExtra("list", viewmodel.getDownloadList().value)
         intent.putExtra("detail", item)
@@ -36,9 +46,7 @@ class DownloadListFragment : Fragment(), MediaItemAdapter.OnClickItem {
         startActivity(intent)
     }
 
-    // TODO: Rename and change types of parameters
-    private var mParam1: String? = null
-    private var mParam2: String? = null
+
 
     private lateinit var mediaAdapter: MediaItemAdapter
     private lateinit var viewmodel: MediaListFragmentViewModel
@@ -137,10 +145,6 @@ class DownloadListFragment : Fragment(), MediaItemAdapter.OnClickItem {
         // TODO: Rename and change types and number of parameters
         fun newInstance(): DownloadListFragment {
             val fragment = DownloadListFragment()
-//            val args = Bundle()
-//            args.putString(ARG_PARAM1, param1)
-//            args.putString(ARG_PARAM2, param2)
-//            fragment.arguments = args
             return fragment
         }
     }

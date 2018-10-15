@@ -13,15 +13,13 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.view.*
 import com.pntstudio.buzz.tedaudio.DetailActivity
-import com.pntstudio.buzz.tedaudio.MainActivity
 import com.pntstudio.buzz.tedaudio.helps.PLAYPOS
 import com.pntstudio.buzz.tedaudio.viewmodel.MediaListFragmentViewModel
 import com.pntstudio.buzz.tedaudio.model.MediaItemAdapter
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
-
-
+import android.app.ActivityManager
+import com.pntstudio.buzz.tedaudio.services.MusicService
 
 
 
@@ -36,11 +34,33 @@ import android.support.v7.widget.RecyclerView
  */
 class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
     override fun onClick(item: MediaItemData,position:Int) {
+
+        if(isMyServiceRunning(MusicService::class.java)){
+            if(viewmodel.getCurrentPlaying().value!=null){
+                if(viewmodel.getCurrentPlaying().value!!.isOffline){
+                    val myService = Intent(activity, MusicService::class.java)
+                    activity!!.stopService(myService)
+
+                }
+            }
+
+        }
         val intent = Intent(activity,DetailActivity::class.java)
         intent.putExtra("list",viewmodel.getMediaList().value)
         intent.putExtra("detail",item)
         intent.putExtra(PLAYPOS,position)
         startActivity(intent)
+    }
+
+
+    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = activity!!.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                return true
+            }
+        }
+        return false
     }
 
 

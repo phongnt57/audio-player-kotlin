@@ -32,6 +32,7 @@ class MediaListFragmentViewModel : ViewModel() {
 
     private var downloadList: MutableLiveData<ArrayList<MediaItemData>> = MutableLiveData()
     private var errorMsg : MutableLiveData<String> = MutableLiveData()
+    private var currentPlaying: MutableLiveData<MediaItemData> = MutableLiveData()
 
 
     fun getTextSearch(): MutableLiveData<String> {
@@ -40,6 +41,13 @@ class MediaListFragmentViewModel : ViewModel() {
 
     fun setTextSearch(text: String) {
         textSearch.value = text
+    }
+
+    fun getCurrentPlaying(): MutableLiveData<MediaItemData>{
+        return  currentPlaying
+    }
+    fun setCurrentPlaying(media: MediaItemData){
+        currentPlaying.value = media
     }
 
 
@@ -61,7 +69,7 @@ class MediaListFragmentViewModel : ViewModel() {
             return downloadList
         }
 
-    private fun loadDownloadFile() {
+     fun loadDownloadFile() {
         val arrayList =arrayListOf<MediaItemData>()
 
         val directory = File(Environment.getExternalStorageDirectory(), FOLDER_DOWNLOAD)
@@ -115,7 +123,6 @@ class MediaListFragmentViewModel : ViewModel() {
                 val reader = RssReader(response.body()!!);
 
                 val list = reader.items!!
-                Log.e("response body value", "".plus(list.size));
 
                 //finally we are setting the list to our MutableLiveData
                 heroList.setValue(list)

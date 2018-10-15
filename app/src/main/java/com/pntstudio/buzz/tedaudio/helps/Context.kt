@@ -9,6 +9,9 @@ import android.support.v4.content.ContextCompat
 import com.pntstudio.buzz.tedaudio.services.MusicService
 import java.text.SimpleDateFormat
 import java.util.*
+import android.app.ActivityManager
+
+
 
 
 fun Context.sendIntent(action: String) {
@@ -49,6 +52,8 @@ fun convertDateToLong(date: String): Long {
     val df = SimpleDateFormat("yyyy.MM.dd HH:mm")
     return df.parse(date).time
 }
+
+
 
 
 
