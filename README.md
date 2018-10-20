@@ -14,5 +14,9 @@ Key feature
 - Download audio and listen audio without internet (IntentService)
 - English subtitles for each (Jsoup)
 
+Play store link
+-------
+https://play.google.com/store/apps/details?id=com.pntstudio.buzz.tedaudio
+
 
 
