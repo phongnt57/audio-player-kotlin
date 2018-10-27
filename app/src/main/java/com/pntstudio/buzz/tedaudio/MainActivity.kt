@@ -18,6 +18,7 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.google.android.gms.ads.MobileAds
 import com.pntstudio.buzz.tedaudio.fragment.DownloadListFragment
 import com.pntstudio.buzz.tedaudio.fragment.MediaListFragment
 import com.pntstudio.buzz.tedaudio.helps.BusProvider
@@ -94,6 +95,14 @@ class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractio
         bus.register(this)
         bus.post(Events.EmptyObject())
         playing_layout.setOnClickListener { showDetailActivity() }
+//        val thread = object : Thread() {
+//            override fun run() {
+//
+//            }
+//        }
+//
+//        thread.start()
+
 
 
     }
@@ -155,11 +164,13 @@ class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractio
     @Subscribe
     fun songChangedEvent(event: Events.SongChanged) {
         Log.e("change", "----");
-        currentPlaying = event.song!!
-        viewmodel.setCurrentPlaying(currentPlaying)
-        playing_layout.visibility = View.VISIBLE
-        playing_song_tv.setText(currentPlaying.title)
-        playing_song_tv.setSelected(true)
+        if(event.song!=null) {
+            currentPlaying = event.song
+            viewmodel.setCurrentPlaying(currentPlaying)
+            playing_layout.visibility = View.VISIBLE
+            playing_song_tv.setText(currentPlaying.title)
+            playing_song_tv.setSelected(true)
+        }
 
 
     }
@@ -171,17 +182,7 @@ class MainActivity : AppCompatActivity(), MediaListFragment.OnFragmentInteractio
     }
 
 
-    /**
-     * add/replace fragment in container [framelayout]
-     */
-    private fun addFragment(fragment: Fragment) {
-//        supportFragmentManager
-//                .beginTransaction()
-//                .setCustomAnimations(R.anim.design_bottom_sheet_slide_in, R.anim.design_bottom_sheet_slide_out)
-//                .replace(R.id.content, fragment, fragment.javaClass.getSimpleName())
-//                .addToBackStack(fragment.javaClass.getSimpleName())
-//                .commit()
-    }
+
 
     inner class DemoFragmentAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 

@@ -17,6 +17,7 @@ import com.pntstudio.buzz.tedaudio.model.MediaItemData
 import kotlinx.android.synthetic.main.fragment_english_sub.*
 import org.jsoup.Jsoup
 import android.text.method.ScrollingMovementMethod
+import com.google.android.gms.ads.AdRequest
 import com.pntstudio.buzz.tedaudio.helps.config
 
 
@@ -52,14 +53,17 @@ class EnglishSubFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewmodel = ViewModelProviders.of(activity!!).get(MediaItemFragmentViewModel::class.java)
         transcript_tv.setMovementMethod(ScrollingMovementMethod())
+        val adRequest = AdRequest.Builder()
+//                .addTestDevice("3A3B42AA545FE3C1B2F25C271FF3D483")
+                .build()
+        english_sub_adView.loadAd(adRequest)
 
 
         viewmodel.getSelectedMedia().observe(this,object : Observer<MediaItemData>{
             override fun onChanged(t: MediaItemData?) {
                 var link = t!!.originLink
-                if(!link!!.contains("http")) link = activity!!.config.getOriginLink(t.title!!)
+                if(!link!!.contains("http")) link = activity!!.config.getOriginLink(t.title!!.replace(".mp3",""))
                 val trancscriptLink = link.replace("?rss", "/transcript?transcript")
-                transcript_tv.text = ""
                 val threadJSoup = Thread(Runnable {
                     try {
                         Jsoup.connect(trancscriptLink).get().run {
@@ -74,12 +78,14 @@ class EnglishSubFragment : Fragment() {
 
                             }
                             activity!!.runOnUiThread(Runnable {
+                                if(!trancript.equals(""))
                                 transcript_tv.text = trancript
                             })
 
 
                         }
                     } catch (e: Exception) {
+                        Log.e("tag english",e.toString())
                         e.printStackTrace()
                     }
                 })

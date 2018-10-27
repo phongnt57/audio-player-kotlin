@@ -122,6 +122,7 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
                         postion = mSongs.indexOf(mCurrSong!!)
 
                     }else{
+                        mSongs = intent.getSerializableExtra("list") as ArrayList<MediaItemData>
                         mCurrSong = intent.getSerializableExtra("detail") as MediaItemData
                         postion = mSongs.indexOf(mCurrSong!!)
 
@@ -684,10 +685,12 @@ class MusicService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnEr
 
     @Subscribe
     fun onReCreateView(event: Events.EmptyObject) {
-        mBus!!.post(Events.SongChanged(mCurrSong))
-        val isPlaying = getIsPlaying()
-        mBus!!.post(Events.SongStateChanged(isPlaying))
-        mBus!!.post(Events.DurationUpdate(mPlayer!!.duration))
+        if(mCurrSong!=null && mBus!=null) {
+            mBus!!.post(Events.SongChanged(mCurrSong))
+            val isPlaying = getIsPlaying()
+            mBus!!.post(Events.SongStateChanged(isPlaying))
+            mBus!!.post(Events.DurationUpdate(mPlayer!!.duration))
+        }
 
 
 

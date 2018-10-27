@@ -3,21 +3,26 @@
     package="com.pntstudio.buzz.tedaudio">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MainAppTheme">
+
+        <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/app_id" />
+
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:name=".SplashActivity"
+            android:theme="@style/Theme.Transparent"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -53,34 +58,32 @@
                 <action android:name="com.simplemobiletools.musicplayer.action.REMOVE_SONG_IDS" />
             </intent-filter>
         </service>
-        <service android:name=".services.DownloadService"/>
+        <service android:name=".services.DownloadService" />
 
-        <receiver
-            android:name=".receiver.HeadsetPlugReceiver">
+        <receiver android:name=".receiver.HeadsetPlugReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.ACTION_HEADSET_PLUG"/>
+                <action android:name="android.intent.action.ACTION_HEADSET_PLUG" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".receiver.RemoteControlReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter android:priority="999">
-                <action android:name="android.intent.action.MEDIA_BUTTON"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".receiver.ControlActionsListener"/>
-
+        <receiver android:name=".receiver.ControlActionsListener" />
         <receiver android:name=".receiver.TurnOffServiceReceiver">
             <intent-filter>
                 <action android:name="STOP_TEST_SERVICE" />
                 <action android:name="START_TEST_SERVICE" />
-
             </intent-filter>
         </receiver>
+
+        <activity android:name=".MainActivity"/>
     </application>
 
 </manifest>

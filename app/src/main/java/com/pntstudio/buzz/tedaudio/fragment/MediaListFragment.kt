@@ -19,6 +19,7 @@ import com.pntstudio.buzz.tedaudio.model.MediaItemAdapter
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
 import android.support.v7.widget.RecyclerView
 import android.app.ActivityManager
+import com.google.android.gms.ads.MobileAds
 import com.pntstudio.buzz.tedaudio.services.MusicService
 
 
@@ -35,16 +36,16 @@ import com.pntstudio.buzz.tedaudio.services.MusicService
 class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
     override fun onClick(item: MediaItemData,position:Int) {
 
-        if(isMyServiceRunning(MusicService::class.java)){
-            if(viewmodel.getCurrentPlaying().value!=null){
-                if(viewmodel.getCurrentPlaying().value!!.isOffline){
-                    val myService = Intent(activity, MusicService::class.java)
-                    activity!!.stopService(myService)
-
-                }
-            }
-
-        }
+//        if(isMyServiceRunning(MusicService::class.java)){
+//            if(viewmodel.getCurrentPlaying().value!=null){
+//                if(viewmodel.getCurrentPlaying().value!!.isOffline){
+//                    val myService = Intent(activity, MusicService::class.java)
+//                    activity!!.stopService(myService)
+//
+//                }
+//            }
+//
+//        }
         val intent = Intent(activity,DetailActivity::class.java)
         intent.putExtra("list",viewmodel.getMediaList().value)
         intent.putExtra("detail",item)
@@ -119,6 +120,7 @@ class MediaListFragment : Fragment(), MediaItemAdapter.OnClickItem {
                 retry_btn.visibility = View.GONE
                 mediaAdapter = MediaItemAdapter(context!!, t!!,t,this@MediaListFragment,-1)
                 mediaRv.adapter = mediaAdapter
+
             }
 
 

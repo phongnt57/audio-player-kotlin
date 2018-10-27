@@ -30,7 +30,7 @@ class RssParseHandler : DefaultHandler() {
         }else if("pubDate"==qName){
             parsingdateTime = true;
 
-        }else if("feedburner:origLink"==qName){
+        }else if("link"==qName){
             parsingOrginLink = true
         }
         else if (localName=="thumbnail" && parsingItem) {
@@ -56,7 +56,7 @@ class RssParseHandler : DefaultHandler() {
         } else if ("pubDate".equals(qName, ignoreCase = true)) {
             parsingdateTime = false
 
-        }else if("feedburner:origLink".equals(qName,ignoreCase = true)){
+        }else if("link".equals(qName,ignoreCase = true)){
             parsingOrginLink = false
         }
     }

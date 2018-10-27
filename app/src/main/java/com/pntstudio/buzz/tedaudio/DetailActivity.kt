@@ -21,6 +21,7 @@ import android.widget.SeekBar
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import com.example.android.uamp.viewmodels.MediaItemFragmentViewModel
+import com.google.android.gms.ads.MobileAds
 import com.pntstudio.buzz.tedaudio.fragment.DetailMediaListFragment
 import com.pntstudio.buzz.tedaudio.fragment.EnglishSubFragment
 import com.pntstudio.buzz.tedaudio.fragment.InfoMediaFragment
@@ -103,12 +104,13 @@ class DetailActivity : AppCompatActivity() {
                 //Do something after 500ms
                 bus.post(Events.EmptyObject())
 
-            }, 500)
+            }, 300)
 
         }
         tabDots.setupWithViewPager(container, true)
         container.offscreenPageLimit = 3
         showStatusPlayer();
+
 
     }
 

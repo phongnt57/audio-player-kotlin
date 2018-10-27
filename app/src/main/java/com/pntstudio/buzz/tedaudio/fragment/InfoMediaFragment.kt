@@ -16,8 +16,10 @@ import android.widget.Toast.LENGTH_SHORT
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.android.uamp.viewmodels.MediaItemFragmentViewModel
+import com.google.android.gms.ads.AdRequest
 
 import com.pntstudio.buzz.tedaudio.R
+import com.pntstudio.buzz.tedaudio.R.string.banner_ad_id
 import com.pntstudio.buzz.tedaudio.helps.PERMISSION_WRITE_STORAGE
 import com.pntstudio.buzz.tedaudio.helps.hasPermission
 import com.pntstudio.buzz.tedaudio.model.Download
@@ -72,6 +74,10 @@ class InfoMediaFragment : Fragment() {
         download_img.setOnClickListener { downLoadFile() }
         share_img.setOnClickListener { shareArticle() }
         video_img.setOnClickListener{ showVideo()}
+        val adRequest = AdRequest.Builder()
+//                .addTestDevice("3A3B42AA545FE3C1B2F25C271FF3D483")
+                .build()
+        adView.loadAd(adRequest)
 
     }
 
@@ -98,7 +104,13 @@ class InfoMediaFragment : Fragment() {
     }
 
     private fun downLoadFile() {
+        if(viewmodel.getSelectedMedia().value!!.isOffline)
+        {
+            return;
+
+        }
         if(activity!!.hasPermission(PERMISSION_WRITE_STORAGE)) {
+            Toast.makeText(activity,"Starting download", LENGTH_SHORT).show()
             val download = Download(viewmodel.getSelectedMedia().value!!.title!!, viewmodel.getSelectedMedia().value!!.mp3Url!!, "", 0, 0,
                     viewmodel.getSelectedMedia().value!!.originLink!!)
             val intent = Intent(activity, DownloadService::class.java)

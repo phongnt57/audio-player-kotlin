@@ -12,9 +12,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.android.uamp.viewmodels.MediaItemFragmentViewModel
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
 import com.pntstudio.buzz.tedaudio.R
 import com.pntstudio.buzz.tedaudio.helps.PLAYPOS
 import com.pntstudio.buzz.tedaudio.helps.SONG_POS
+import com.pntstudio.buzz.tedaudio.helps.config
 import com.pntstudio.buzz.tedaudio.model.MediaItemAdapter
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
 import com.pntstudio.buzz.tedaudio.model.MediaItemDetailAdapter
@@ -35,6 +38,24 @@ class DetailMediaListFragment : Fragment(), MediaItemDetailAdapter.OnClickItem {
         mediaAdapter.currentItemSelect = position
         mediaAdapter.notifyDataSetChanged()
         songPicked(position)
+        numberClick++
+
+        if(mInterstitialAd==null) {
+            mInterstitialAd = InterstitialAd(activity)
+            mInterstitialAd!!.setAdUnitId(getString(R.string.interstitial_ad_id))
+
+            mInterstitialAd!!.loadAd(AdRequest.Builder()
+//                    .addTestDevice("3A3B42AA545FE3C1B2F25C271FF3D483") // huawei
+                    .build())
+        }
+        if(numberClick>=5){
+            if(mInterstitialAd!=null && mInterstitialAd!!.isLoaded){
+                mInterstitialAd!!.show()
+                activity!!.config.setNumberClick(0)
+
+            }
+
+        }
 
     }
 
@@ -42,6 +63,9 @@ class DetailMediaListFragment : Fragment(), MediaItemDetailAdapter.OnClickItem {
     private  lateinit var viewmodel: MediaItemFragmentViewModel
 
     private var mListener: OnFragmentInteractionListener? = null
+    private var numberClick = 0
+    private var mInterstitialAd: InterstitialAd? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +96,7 @@ class DetailMediaListFragment : Fragment(), MediaItemDetailAdapter.OnClickItem {
 
 
         })
+        numberClick =activity!!.config.getNumberClick()
 
 //        viewmodel.heroes.observe(this, object : Observer<ArrayList<MediaItemData>> {
 //            override fun onChanged(t: ArrayList<MediaItemData>?) {

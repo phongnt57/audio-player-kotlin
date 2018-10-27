@@ -18,6 +18,7 @@ import com.pntstudio.buzz.tedaudio.model.MediaItemAdapter
 import com.pntstudio.buzz.tedaudio.model.MediaItemData
 import com.pntstudio.buzz.tedaudio.services.MusicService
 import com.pntstudio.buzz.tedaudio.viewmodel.MediaListFragmentViewModel
+import kotlinx.android.synthetic.main.fragment_down_list.*
 import kotlinx.android.synthetic.main.fragment_meia_list.*
 
 
@@ -28,16 +29,16 @@ import kotlinx.android.synthetic.main.fragment_meia_list.*
  */
 class DownloadListFragment : Fragment(), MediaItemAdapter.OnClickItem {
     override fun onClick(item: MediaItemData, position: Int) {
-        if(context!!.config.isMyServiceRunning(MusicService::class.java,activity!!)){
-            if(viewmodel.getCurrentPlaying().value!=null){
-                if(!viewmodel.getCurrentPlaying().value!!.isOffline){
-                    val myService = Intent(activity, MusicService::class.java)
-                    activity!!.stopService(myService)
-
-                }
-            }
-
-        }
+//        if(context!!.config.isMyServiceRunning(MusicService::class.java,activity!!)){
+//            if(viewmodel.getCurrentPlaying().value!=null){
+//                if(!viewmodel.getCurrentPlaying().value!!.isOffline){
+//                    val myService = Intent(activity, MusicService::class.java)
+//                    activity!!.stopService(myService)
+//
+//                }
+//            }
+//
+//        }
 
         val intent = Intent(activity, DetailActivity::class.java)
         intent.putExtra("list", viewmodel.getDownloadList().value)
@@ -74,22 +75,22 @@ class DownloadListFragment : Fragment(), MediaItemAdapter.OnClickItem {
 //        toolbar.setTitle("Audio")
         val linearLayoutMamanger = LinearLayoutManager(activity)
 
-        up_button.hide()
-        up_button.setOnClickListener {
-            linearLayoutMamanger.smoothScrollToPosition(mediaRv, null, 0);
+        download_up_button.hide()
+        download_up_button.setOnClickListener {
+            linearLayoutMamanger.smoothScrollToPosition(download_mediaRv, null, 0);
         }
-        mediaRv.setHasFixedSize(true);
-        mediaRv.setLayoutManager(linearLayoutMamanger);
-        mediaRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        download_mediaRv.setHasFixedSize(true);
+        download_mediaRv.setLayoutManager(linearLayoutMamanger);
+        download_mediaRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
-                if (dy > 0 || dy < 0 && up_button.isShown())
-                    up_button.hide()
+                if (dy > 0 || dy < 0 && download_up_button.isShown())
+                    download_up_button.hide()
             }
 
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && linearLayoutMamanger.findFirstCompletelyVisibleItemPosition() > 3) {
-                    up_button.show()
+                    download_up_button.show()
                 }
                 super.onScrollStateChanged(recyclerView, newState)
             }
@@ -98,7 +99,10 @@ class DownloadListFragment : Fragment(), MediaItemAdapter.OnClickItem {
         viewmodel.downloads.observe(activity!!, object : Observer<ArrayList<MediaItemData>> {
             override fun onChanged(t: ArrayList<MediaItemData>?) {
                 mediaAdapter = MediaItemAdapter(context!!, t!!, t, this@DownloadListFragment, -1)
-                mediaRv.adapter = mediaAdapter
+                download_mediaRv.adapter = mediaAdapter
+                if(mediaAdapter.heroList.size> 0 )
+                empty_tv.visibility = View.GONE
+
             }
 
 

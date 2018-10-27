@@ -55,6 +55,10 @@
     <style name="MainAppTheme" parent="AppTheme.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/colorAccent</item>
+
+
+
+
         <!--<item name="android:windowTranslucentStatus">true</item>-->
 
 
@@ -67,6 +71,20 @@
         <!--This line changes the color of icons in toolbar (back, overflow menu icons)-->
         <item name="android:textColorSecondary">@color/white</item>
     </style>
+
+    <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <!--<item name="android:windowContentOverlay">@null</item>-->
+        <!--<item name="android:windowDisablePreview">true</item>-->
+
+
+
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+    </style>
+    <style name="AppThemeSplash" parent="android:Theme.Wallpaper" />
+
 
 
     <!--<style name="AppTheme.NoActionBar">-->

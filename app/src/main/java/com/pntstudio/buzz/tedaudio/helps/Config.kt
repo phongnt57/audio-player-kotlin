@@ -53,6 +53,14 @@ class Config(val context: Context)  {
         return false
     }
 
+    fun getNumberClick():Int {
+        return prefs.getInt("key_click",0)
+    }
+
+    fun setNumberClick(value:Int){
+        return prefs.edit().putInt("key_click",value).apply()
+    }
+
 
 
 
