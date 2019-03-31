@@ -29,16 +29,6 @@ import kotlinx.android.synthetic.main.fragment_meia_list.*
  */
 class DownloadListFragment : Fragment(), MediaItemAdapter.OnClickItem {
     override fun onClick(item: MediaItemData, position: Int) {
-//        if(context!!.config.isMyServiceRunning(MusicService::class.java,activity!!)){
-//            if(viewmodel.getCurrentPlaying().value!=null){
-//                if(!viewmodel.getCurrentPlaying().value!!.isOffline){
-//                    val myService = Intent(activity, MusicService::class.java)
-//                    activity!!.stopService(myService)
-//
-//                }
-//            }
-//
-//        }
 
         val intent = Intent(activity, DetailActivity::class.java)
         intent.putExtra("list", viewmodel.getDownloadList().value)
