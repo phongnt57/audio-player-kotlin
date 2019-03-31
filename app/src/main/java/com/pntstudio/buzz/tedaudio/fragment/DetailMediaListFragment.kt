@@ -45,7 +45,7 @@ class DetailMediaListFragment : Fragment(), MediaItemDetailAdapter.OnClickItem {
             mInterstitialAd!!.setAdUnitId(getString(R.string.interstitial_ad_id))
 
             mInterstitialAd!!.loadAd(AdRequest.Builder()
-//                    .addTestDevice("3A3B42AA545FE3C1B2F25C271FF3D483") // huawei
+                    .addTestDevice("3A3B42AA545FE3C1B2F25C271FF3D483") // huawei
                     .build())
         }
         if(numberClick>=5){

@@ -54,7 +54,7 @@ class EnglishSubFragment : Fragment() {
         viewmodel = ViewModelProviders.of(activity!!).get(MediaItemFragmentViewModel::class.java)
         transcript_tv.setMovementMethod(ScrollingMovementMethod())
         val adRequest = AdRequest.Builder()
-//                .addTestDevice("3A3B42AA545FE3C1B2F25C271FF3D483")
+                .addTestDevice("3A3B42AA545FE3C1B2F25C271FF3D483")
                 .build()
         english_sub_adView.loadAd(adRequest)
 

@@ -15,10 +15,13 @@
     <string name="next">Next</string>
     <string name="title_download">Download</string>
     <string name="alarm">Alarm</string>
-    <string name="app_id">ca-app-pub-7735131451668227~2256656858</string>
-    <string name="banner_ad_id">ca-app-pub-7735131451668227/3050578360</string>
-    <string name="interstitial_ad_id">ca-app-pub-7735131451668227/8868089244</string>
+    <!--<string name="app_id">ca-app-pub-7735131451668227~2256656858</string>-->
+    <string name="app_id">ca-app-pub-5066140370235710~6309700169</string>
+
+    <string name="banner_ad_id">ca-app-pub-5066140370235710/9482658416</string>
+    <string name="interstitial_ad_id">ca-app-pub-5066140370235710/3648001511</string>
+    <string name="banned_id_english_sub">ca-app-pub-5066140370235710/5692598974</string>
+
     <string name="offline_empty">You have not download any article</string>
     <string name="empty_sub">Not found subtitle</string>
-    <string name="banned_id_english_sub">ca-app-pub-7735131451668227/1238683101</string>
 </resources>
